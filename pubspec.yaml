@@ -1,0 +1,28 @@
+name: h2y_music_app
+description: "압축 해제 없이 ZIP 대용량 음원을 직접 온디맨드 스트리밍 재생하는 Flutter 모바일/데스크톱 음악 플레이어"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  just_audio: ^0.9.36
+  audio_service: ^0.18.12
+  archive: ^3.6.1
+  file_picker: ^8.0.0
+  path_provider: ^2.1.2
+  provider: ^6.1.2
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true

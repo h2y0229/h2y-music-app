@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="cyber">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>📜 h2y Music Player - Track List (PAGE-TRACK-01)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Flutter AppColors 토큰과 100% 동일한 디자인 시스템 */
+    :root, [data-theme="cyber"] {
+      --bg-dark: #07080D;
+      --bg-surface-1: #0D0F18;
+      --bg-surface-2: #141724;
+      --bg-surface-3: #1C2032;
+      --glass-base: rgba(18, 22, 36, 0.60);
+      --glass-card: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.09);
+      --glass-border-bright: rgba(255, 255, 255, 0.20);
+      --accent-cyan: #00F0FF;
+      --accent-cyan-dim: rgba(0, 240, 255, 0.20);
+      --accent-purple: #A855F7;
+      --accent-purple-dim: rgba(168, 85, 247, 0.20);
+      --accent-pink: #EC4899;
+      --accent-emerald: #10B981;
+      --accent-amber: #F59E0B;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --accent-gradient: linear-gradient(135deg, #00F0FF 0%, #A855F7 50%, #EC4899 100%);
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #F1F5F9;
+      --bg-surface-1: #FFFFFF;
+      --bg-surface-2: #E2E8F0;
+      --bg-surface-3: #CBD5E1;
+      --glass-base: rgba(255, 255, 255, 0.75);
+      --glass-card: rgba(255, 255, 255, 0.60);
+      --glass-border: rgba(0, 0, 0, 0.08);
+      --glass-border-bright: rgba(0, 0, 0, 0.16);
+      --accent-cyan: #0284C7;
+      --accent-cyan-dim: rgba(2, 132, 199, 0.15);
+      --accent-purple: #7C3AED;
+      --accent-purple-dim: rgba(124, 58, 237, 0.15);
+      --accent-pink: #DB2777;
+      --accent-emerald: #059669;
+      --accent-amber: #D97706;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --accent-gradient: linear-gradient(135deg, #0284C7 0%, #7C3AED 50%, #DB2777 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 16px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Ambient Neon Glow Orbs */
+    .ambient-orb-1 {
+      position: fixed;
+      top: -100px;
+      left: -50px;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      opacity: 0.08;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-orb-2 {
+      position: fixed;
+      bottom: 60px;
+      right: -80px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      opacity: 0.08;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top Controls */
+    .proto-controls {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      z-index: 10;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .proto-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--accent-cyan-dim);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      font-weight: 700;
+    }
+    .proto-btn-group { display: flex; align-items: center; gap: 6px; }
+    .proto-btn {
+      background: var(--glass-base);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .proto-btn:hover { color: var(--text-primary); border-color: var(--accent-cyan); }
+    .proto-btn.active { background: var(--accent-cyan-dim); color: var(--accent-cyan); border-color: var(--accent-cyan); }
+
+    /* App Shell Container */
+    .app-shell {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 5;
+      transition: max-width 0.3s ease;
+    }
+    .app-shell.wide-mode { max-width: 860px; }
+
+    /* Glass Box */
+    .glass-box {
+      background: var(--glass-base);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 1. Global Header */
+    .header-bar {
+      padding: 12px 16px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #030712;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .header-title-wrap { display: flex; flex-direction: column; }
+    .header-title-row { display: flex; align-items: center; gap: 6px; }
+    .header-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .version-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent-cyan); font-weight: 700; }
+    .header-sub { font-size: 11px; color: var(--text-muted); }
+    .vfs-status-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--accent-cyan-dim);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .vfs-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 6px var(--accent-cyan); }
+
+    /* 2. DropZone Bar */
+    .dropzone-bar {
+      padding: 10px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      border-color: rgba(0, 240, 255, 0.4);
+      transition: all 0.2s;
+    }
+    .zip-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--accent-cyan-dim);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .zip-info { flex: 1; min-width: 0; }
+    .zip-name { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .zip-desc { font-size: 11px; color: var(--text-muted); }
+    .zip-action-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--accent-cyan-dim);
+      border: 1px solid var(--glass-border-bright);
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* 3. Mobile Navigation Tabs */
+    .mobile-tab-row {
+      display: flex;
+      gap: 8px;
+    }
+    .nav-tab-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      background: var(--glass-base);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn.active {
+      background: var(--accent-cyan-dim);
+      color: var(--accent-cyan);
+      border-color: rgba(0, 240, 255, 0.4);
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0, 240, 255, 0.2);
+    }
+
+    /* 4. Track List View Container */
+    .track-list-card {
+      padding: 16px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 440px;
+    }
+
+    /* Search Box */
+    .search-box {
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    /* Filter Pills */
+    .filter-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+    .filter-chip {
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .filter-chip.active { background: var(--accent-cyan-dim); color: var(--accent-cyan); border-color: rgba(0, 240, 255, 0.4); }
+
+    /* Track Tiles */
+    .tracks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .tracks-container::-webkit-scrollbar { width: 4px; }
+    .tracks-container::-webkit-scrollbar-thumb { background: var(--glass-border-bright); border-radius: 4px; }
+
+    .track-tile {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--glass-card);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .track-tile:hover { background: rgba(255, 255, 255, 0.08); }
+    .track-tile.active {
+      background: var(--accent-cyan-dim);
+      border-color: rgba(0, 240, 255, 0.4);
+    }
+    .track-idx {
+      width: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+    }
+    .track-tile.active .track-idx { color: var(--accent-cyan); }
+    .track-info { flex: 1; min-width: 0; }
+    .track-name { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .track-tile.active .track-name { color: var(--accent-cyan); }
+    .track-path { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+    
+    .format-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+    .track-size { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); margin-left: 4px; }
+
+    /* 5. MiniPlayerBar */
+    .mini-player {
+      padding: 14px 18px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mini-player-top { display: flex; align-items: center; gap: 12px; }
+    .cover-art-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      background: var(--bg-surface-3);
+      border: 1px solid var(--glass-border-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .mini-track-info { flex: 1; min-width: 0; }
+    .mini-title { font-size: 15px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-artist { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .mini-ctrl-btns { display: flex; align-items: center; gap: 4px; }
+    .btn-icon-sq {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .btn-play-neon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      border: none;
+      color: #030712;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+    }
+    .timeline-row { display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); }
+    .timeline-track { flex: 1; height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; position: relative; }
+    .timeline-fill { width: 45%; height: 100%; background: var(--accent-cyan); border-radius: 4px; position: relative; box-shadow: 0 0 8px var(--accent-cyan); }
+    .timeline-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--text-primary); border: 2px solid var(--accent-cyan); position: absolute; right: -6px; top: -4px; }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-orb-1"></div>
+  <div class="ambient-orb-2"></div>
+
+  <!-- Top Prototype Control Bar -->
+  <div class="proto-controls">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="proto-badge">PAGE-TRACK-01</span>
+      <span style="font-size: 12px; color: var(--text-muted);">VFS Track List 프로토타입</span>
+    </div>
+
+    <div class="proto-btn-group">
+      <button class="proto-btn" onclick="toggleTheme()">🎨 <span id="themeLabel">다크 테마</span></button>
+      <a href="../05-디자인가이드.html" class="proto-btn">🎨 디자인가이드</a>
+    </div>
+  </div>
+
+  <!-- App Shell Container -->
+  <div class="app-shell">
+
+    <!-- 1. Global Header Bar -->
+    <div class="glass-box header-bar">
+      <div class="header-left">
+        <div class="header-logo-icon">⚡</div>
+        <div class="header-title-wrap">
+          <div class="header-title-row">
+            <span class="header-title">h2y Music Player</span>
+            <span class="version-tag">v0.0.1</span>
+          </div>
+          <span class="header-sub">ZIP 무해제 온디맨드 스트리밍 플레이어</span>
+        </div>
+      </div>
+      <div class="vfs-status-chip">
+        <div class="vfs-dot"></div>
+        <span>VFS Ready</span>
+      </div>
+    </div>
+
+    <!-- 2. DropZone Bar -->
+    <div class="glass-box dropzone-bar" onclick="alert('file_picker 호출')">
+      <div class="zip-icon-box">📁</div>
+      <div class="zip-info">
+        <div class="zip-name">Album_FLAC_Archive_2026.zip</div>
+        <div class="zip-desc">트랙 24개 (18ms) • 변경하려면 터치</div>
+      </div>
+      <div class="zip-action-badge">
+        <span>⇆</span>
+        <span>변경</span>
+      </div>
+    </div>
+
+    <!-- 3. Mobile Navigation Tab Bar -->
+    <div class="mobile-tab-row">
+      <a href="PAGE-PLAY-01.html" class="nav-tab-btn">
+        <span>💿</span>
+        <span>Now Playing</span>
+      </a>
+      <a href="PAGE-TRACK-01.html" class="nav-tab-btn active">
+        <span>📜</span>
+        <span>Track List (24)</span>
+      </a>
+      <a href="PAGE-LYRICS-01.html" class="nav-tab-btn">
+        <span>🎤</span>
+        <span>Lyrics</span>
+      </a>
+      <a href="PAGE-EQ-01.html" class="nav-tab-btn">
+        <span>🎚️</span>
+        <span>EQ</span>
+      </a>
+    </div>
+
+    <!-- 4. Track List View Card -->
+    <div class="glass-box track-list-card">
+      <!-- Search Box -->
+      <div class="search-box">
+        <span style="font-size: 14px; color: var(--text-muted);">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="트랙 검색 (제목, 경로)..." oninput="renderTracks()">
+      </div>
+
+      <!-- Filter Row -->
+      <div class="filter-row">
+        <button class="filter-chip active" onclick="setFilter('ALL', this)">전체 (7)</button>
+        <button class="filter-chip" onclick="setFilter('FLAC', this)">FLAC (4)</button>
+        <button class="filter-chip" onclick="setFilter('MP3', this)">MP3 (2)</button>
+        <button class="filter-chip" onclick="setFilter('WAV', this)">WAV (1)</button>
+      </div>
+
+      <!-- Track Items -->
+      <div class="tracks-container" id="tracksContainer">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- 5. MiniPlayerBar (하단 플로팅 플레이어 바) -->
+    <div class="glass-box mini-player">
+      <div class="mini-player-top">
+        <div class="cover-art-box">🎵</div>
+        <div class="mini-track-info">
+          <div id="miniTitle" class="mini-title">Track 01. Cyber City Night</div>
+          <div id="miniArtist" class="mini-artist">Neon Horizon • Future Sound</div>
+        </div>
+        <div class="mini-ctrl-btns">
+          <button class="btn-icon-sq" title="이전 곡" onclick="prevTrack()">⏮</button>
+          <button id="mainPlayBtn" class="btn-play-neon" onclick="togglePlay()">⏸</button>
+          <button class="btn-icon-sq" title="다음 곡" onclick="nextTrack()">⏭</button>
+        </div>
+      </div>
+
+      <div class="timeline-row">
+        <span>01:45</span>
+        <div class="timeline-track">
+          <div class="timeline-fill">
+            <div class="timeline-thumb"></div>
+          </div>
+        </div>
+        <span>04:15</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let isDark = true;
+    function toggleTheme() {
+      isDark = !isDark;
+      const theme = isDark ? 'cyber' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeLabel').innerText = isDark ? '다크 테마' : '라이트 테마';
+    }
+
+    const trackList = [
+      { id: "01", name: "Track 01. Cyber City Night.flac", path: "/Music/FLAC/Track 01. Cyber City Night.flac", format: "FLAC", size: "42.8 MB", active: true },
+      { id: "02", name: "Track 02. Neon Highway.mp3", path: "/Music/MP3/Track 02. Neon Highway.mp3", format: "MP3", size: "11.2 MB", active: false },
+      { id: "03", name: "Track 03. Midnight Rain.flac", path: "/Music/FLAC/Track 03. Midnight Rain.flac", format: "FLAC", size: "38.5 MB", active: false },
+      { id: "04", name: "Track 04. Future Nostalgia.wav", path: "/Music/WAV/Track 04. Future Nostalgia.wav", format: "WAV", size: "55.1 MB", active: false },
+      { id: "05", name: "Track 05. Digital Love.flac", path: "/Music/FLAC/Track 05. Digital Love.flac", format: "FLAC", size: "40.2 MB", active: false },
+      { id: "06", name: "Track 06. Solar Wind.mp3", path: "/Music/MP3/Track 06. Solar Wind.mp3", format: "MP3", size: "9.8 MB", active: false },
+      { id: "07", name: "Track 07. Deep Resonance.flac", path: "/Music/FLAC/Track 07. Deep Resonance.flac", format: "FLAC", size: "58.4 MB", active: false }
+    ];
+
+    let currentFilter = 'ALL';
+
+    function renderTracks() {
+      const container = document.getElementById('tracksContainer');
+      container.innerHTML = '';
+      const q = document.getElementById('searchInput').value.toLowerCase();
+
+      trackList.forEach((t, idx) => {
+        if (currentFilter !== 'ALL' && t.format !== currentFilter) return;
+        if (q && !t.name.toLowerCase().includes(q) && !t.path.toLowerCase().includes(q)) return;
+
+        const tile = document.createElement('div');
+        tile.className = `track-tile ${t.active ? 'active' : ''}`;
+        tile.onclick = () => selectTrack(idx);
+
+        tile.innerHTML = `
+          <div class="track-idx">${t.active ? '📊' : t.id}</div>
+          <div class="track-info">
+            <div class="track-name">${t.name}</div>
+            <div class="track-path">${t.path}</div>
+          </div>
+          <span class="format-badge">${t.format}</span>
+          <span class="track-size">${t.size}</span>
+        `;
+        container.appendChild(tile);
+      });
+    }
+
+    function selectTrack(idx) {
+      trackList.forEach((t, i) => t.active = (i === idx));
+      document.getElementById('miniTitle').innerText = trackList[idx].name.replace(/\.[^.]+$/, '');
+      renderTracks();
+    }
+
+    function setFilter(fmt, btn) {
+      currentFilter = fmt;
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTracks();
+    }
+
+    let isPlaying = true;
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      document.getElementById('mainPlayBtn').innerText = isPlaying ? '⏸' : '▶';
+    }
+
+    function nextTrack() {
+      const activeIdx = trackList.findIndex(t => t.active);
+      const nextIdx = (activeIdx + 1) % trackList.length;
+      selectTrack(nextIdx);
+    }
+
+    function prevTrack() {
+      const activeIdx = trackList.findIndex(t => t.active);
+      const pIdx = (activeIdx - 1 + trackList.length) % trackList.length;
+      selectTrack(pIdx);
+    }
+
+    renderTracks();
+  </script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="cyber">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎨 h2y Music Player UI 디자인 시스템 & 가이드 (FORM-05-04)</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* 5대 멀티 테마 시스템 (Flutter AppColors와 100% 동기화) */
+    :root, [data-theme="cyber"] {
+      --bg-base: #07080D;
+      --bg-sidebar: rgba(11, 15, 25, 0.96);
+      --bg-surface-1: #0D0F18;
+      --bg-surface-2: #141724;
+      --bg-surface-3: #1C2032;
+      --bg-glass: rgba(18, 22, 36, 0.65);
+      --border-glass: rgba(255, 255, 255, 0.09);
+      --border-bright: rgba(0, 240, 255, 0.35);
+      --cyan-neon: #00F0FF;
+      --cyan-glow: rgba(0, 240, 255, 0.25);
+      --purple-neon: #A855F7;
+      --purple-glow: rgba(168, 85, 247, 0.25);
+      --pink-neon: #EC4899;
+      --emerald-neon: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --amber-neon: #F59E0B;
+      --rose-neon: #F43F5E;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --card-hover-border: rgba(0, 240, 255, 0.4);
+      --logo-gradient: linear-gradient(135deg, #00F0FF 0%, #A855F7 50%, #EC4899 100%);
+      --theme-name: "⚡ Cyber Neon (다크 ⭐)";
+    }
+
+    [data-theme="light"] {
+      --bg-base: #F1F5F9;
+      --bg-sidebar: #FFFFFF;
+      --bg-surface-1: #FFFFFF;
+      --bg-surface-2: #E2E8F0;
+      --bg-surface-3: #CBD5E1;
+      --bg-glass: rgba(255, 255, 255, 0.85);
+      --border-glass: rgba(0, 0, 0, 0.08);
+      --border-bright: rgba(2, 132, 199, 0.35);
+      --cyan-neon: #0284C7;
+      --cyan-glow: rgba(2, 132, 199, 0.15);
+      --purple-neon: #7C3AED;
+      --purple-glow: rgba(124, 58, 237, 0.15);
+      --pink-neon: #DB2777;
+      --emerald-neon: #059669;
+      --emerald-glow: rgba(5, 150, 105, 0.15);
+      --amber-neon: #D97706;
+      --rose-neon: #E11D48;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --text-dim: #64748B;
+      --card-hover-border: rgba(2, 132, 199, 0.4);
+      --logo-gradient: linear-gradient(135deg, #0284C7 0%, #7C3AED 50%, #DB2777 100%);
+      --theme-name: "☀️ Clean Slate (라이트)";
+    }
+
+    [data-theme="emerald"] {
+      --bg-base: #04120C;
+      --bg-sidebar: rgba(6, 24, 16, 0.96);
+      --bg-surface-1: #06281B;
+      --bg-surface-2: #083E28;
+      --bg-surface-3: #0B5235;
+      --bg-glass: rgba(6, 40, 27, 0.75);
+      --border-glass: rgba(16, 185, 129, 0.15);
+      --border-bright: rgba(16, 185, 129, 0.4);
+      --cyan-neon: #10B981;
+      --cyan-glow: rgba(16, 185, 129, 0.25);
+      --purple-neon: #34D399;
+      --purple-glow: rgba(52, 211, 153, 0.2);
+      --pink-neon: #059669;
+      --emerald-neon: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --amber-neon: #F59E0B;
+      --rose-neon: #F43F5E;
+      --text-main: #ECFDF5;
+      --text-muted: #A7F3D0;
+      --text-dim: #6EE7B7;
+      --card-hover-border: rgba(16, 185, 129, 0.4);
+      --logo-gradient: linear-gradient(135deg, #10B981, #059669);
+      --theme-name: "🌿 Deep Emerald (친환경)";
+    }
+
+    [data-theme="purple"] {
+      --bg-base: #0A0518;
+      --bg-sidebar: rgba(18, 9, 38, 0.96);
+      --bg-surface-1: #150B2C;
+      --bg-surface-2: #230F44;
+      --bg-surface-3: #341865;
+      --bg-glass: rgba(21, 11, 44, 0.75);
+      --border-glass: rgba(168, 85, 247, 0.15);
+      --border-bright: rgba(168, 85, 247, 0.4);
+      --cyan-neon: #C084FC;
+      --cyan-glow: rgba(192, 132, 252, 0.25);
+      --purple-neon: #A855F7;
+      --purple-glow: rgba(168, 85, 247, 0.3);
+      --pink-neon: #F43F5E;
+      --emerald-neon: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --amber-neon: #FBBF24;
+      --rose-neon: #F43F5E;
+      --text-main: #FAF5FF;
+      --text-muted: #E9D5FF;
+      --text-dim: #C084FC;
+      --card-hover-border: rgba(168, 85, 247, 0.4);
+      --logo-gradient: linear-gradient(135deg, #C084FC, #F43F5E);
+      --theme-name: "🌌 Midnight Purple (바이올렛)";
+    }
+
+    [data-theme="amber"] {
+      --bg-base: #120904;
+      --bg-sidebar: rgba(28, 14, 7, 0.96);
+      --bg-surface-1: #241205;
+      --bg-surface-2: #381C0A;
+      --bg-surface-3: #52290E;
+      --bg-glass: rgba(36, 18, 5, 0.75);
+      --border-glass: rgba(245, 158, 11, 0.15);
+      --border-bright: rgba(245, 158, 11, 0.4);
+      --cyan-neon: #F59E0B;
+      --cyan-glow: rgba(245, 158, 11, 0.25);
+      --purple-neon: #FBBF24;
+      --purple-glow: rgba(251, 191, 36, 0.2);
+      --pink-neon: #EF4444;
+      --emerald-neon: #10B981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --amber-neon: #D97706;
+      --rose-neon: #EF4444;
+      --text-main: #FFFBEB;
+      --text-muted: #FDE68A;
+      --text-dim: #F59E0B;
+      --card-hover-border: rgba(245, 158, 11, 0.4);
+      --logo-gradient: linear-gradient(135deg, #F59E0B, #EF4444);
+      --theme-name: "🔥 Sunset Amber (골드)";
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .app-wrapper { display: flex; width: 100%; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-glass);
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px;
+      gap: 24px;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-glass);
+    }
+    .logo-icon { font-size: 22px; }
+    .logo-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; background: var(--logo-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .nav-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin: 0 8px 8px; font-weight: 700; }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    .nav-item:hover { background: var(--bg-surface-2); color: var(--text-main); transform: translateX(3px); }
+    .nav-item.active { background: var(--bg-surface-1); color: var(--cyan-neon); font-weight: 700; border: 1px solid var(--border-bright); box-shadow: 0 4px 14px var(--cyan-glow); }
+
+    /* Main Area */
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    /* Top Bar */
+    .top-bar {
+      height: 64px;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-glass);
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .page-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: 700; font-family: 'Outfit', sans-serif; }
+    .page-id-badge { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 8px; border-radius: 6px; background: var(--cyan-glow); color: var(--cyan-neon); border: 1px solid var(--border-bright); }
+    
+    .theme-selector-box { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .theme-select {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-glass);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Content Body */
+    .content-body { padding: 24px 28px 80px; display: flex; flex-direction: column; gap: 32px; }
+
+    .guide-section { display: flex; flex-direction: column; gap: 16px; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-glass);
+      padding-bottom: 10px;
+    }
+    .section-title { font-size: 18px; font-weight: 700; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
+    .section-badge { font-size: 11px; font-family: 'JetBrains Mono'; color: var(--text-dim); }
+
+    /* Palette Grid */
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .color-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .color-card:hover { border-color: var(--cyan-neon); transform: translateY(-3px); box-shadow: 0 8px 24px var(--cyan-glow); }
+    .color-swatch-large {
+      height: 72px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 8px;
+    }
+    .copy-hint { font-size: 10px; background: rgba(0,0,0,0.5); color: #fff; padding: 2px 6px; border-radius: 4px; opacity: 0; transition: opacity 0.2s; }
+    .color-card:hover .copy-hint { opacity: 1; }
+    .color-name { font-weight: 700; font-size: 13px; }
+    .color-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .color-desc { font-size: 11px; color: var(--text-dim); line-height: 1.3; }
+
+    /* Badges Grid */
+    .badge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .badge-item-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Living Components Showcase */
+    .comp-showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 20px;
+    }
+    .comp-card {
+      background: var(--bg-surface-1);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .comp-title { font-size: 14px; font-weight: 700; color: var(--cyan-neon); display: flex; align-items: center; gap: 8px; }
+
+    /* Mini Vinyl Demo */
+    .mini-vinyl {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #222436 0%, #0C0D15 70%, #1B1D2C 100%);
+      border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 20px var(--cyan-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: spinDemo 8s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spinDemo { 100% { transform: rotate(360deg); } }
+    .mini-label { width: 44px; height: 44px; border-radius: 50%; background: var(--logo-gradient); display: flex; align-items: center; justify-content: center; color: #030712; font-size: 20px; }
+
+    /* Toast */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-surface-1);
+      border: 1px solid var(--cyan-neon);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 999;
+      animation: slideUp 0.2s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo-box">
+      <div class="logo-icon">🎵</div>
+      <div>
+        <div class="logo-title">h2y MUSIC UI</div>
+        <div style="font-size: 11px; color: var(--text-dim);">Design System v2.2</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-group-title">디자인 시스템 가이드</div>
+      <ul class="nav-list">
+        <a href="#sec-theme" class="nav-item active">
+          <span>🎨</span>
+          <span>1. 컬러 토큰 (AppColors)</span>
+        </a>
+        <a href="#sec-badge" class="nav-item">
+          <span>🏷️</span>
+          <span>2. VFS & 오디오 배지</span>
+        </a>
+        <a href="#sec-typo" class="nav-item">
+          <span>🔤</span>
+          <span>3. 타이포그래피 스케일</span>
+        </a>
+        <a href="#sec-comp" class="nav-item">
+          <span>🧩</span>
+          <span>4. 핵심 UI 컴포넌트</span>
+        </a>
+      </ul>
+    </div>
+
+    <div>
+      <div class="nav-group-title">프로토타입 화면 링크</div>
+      <ul class="nav-list">
+        <a href="prototype/PAGE-PLAY-01.html" class="nav-item">
+          <span>💿</span>
+          <span>PAGE-PLAY-01 (Now Playing)</span>
+        </a>
+        <a href="prototype/PAGE-TRACK-01.html" class="nav-item">
+          <span>📜</span>
+          <span>PAGE-TRACK-01 (트랙 목록)</span>
+        </a>
+        <a href="prototype/PAGE-LYRICS-01.html" class="nav-item">
+          <span>🎤</span>
+          <span>PAGE-LYRICS-01 (동기화 가사)</span>
+        </a>
+        <a href="prototype/PAGE-EQ-01.html" class="nav-item">
+          <span>🎚️</span>
+          <span>PAGE-EQ-01 (10밴드 EQ)</span>
+        </a>
+      </ul>
+    </div>
+
+    <div style="margin-top: auto; font-size: 11px; color: var(--text-dim); line-height: 1.5; border-top: 1px solid var(--border-glass); padding-top: 12px;">
+      • FORM-05-04 Living Design<br>• Flutter AppColors 100% 일치<br>• 5대 멀티 테마 전환 허브
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-area">
+    <header class="top-bar">
+      <div class="page-title">
+        <span>🎵 h2y Music Player UI 디자인 시스템 & 멀티 테마 가이드</span>
+        <span class="page-id-badge">FORM-05-04 SPEC</span>
+      </div>
+
+      <div class="theme-selector-box">
+        <span>🎨 테마 실시간 전환:</span>
+        <select id="themeSelect" class="theme-select" onchange="changeTheme(this.value)">
+          <option value="cyber">⚡ Cyber Neon (다크 ⭐ 기본)</option>
+          <option value="light">☀️ Clean Slate (라이트)</option>
+          <option value="emerald">🌿 Deep Emerald (친환경)</option>
+          <option value="purple">🌌 Midnight Purple (바이올렛)</option>
+          <option value="amber">🔥 Sunset Amber (골드)</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="content-body">
+
+      <!-- Section 1: 컬러 팔레트 & CSS 변수 토큰 -->
+      <section id="sec-theme" class="guide-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span>🎨</span>
+            <span>1. 오디오 앱 핵심 컬러 팔레트 & CSS 변수 토큰 (AppColors)</span>
+          </div>
+          <span class="section-badge">카드 클릭 시 토큰 자동 복사</span>
+        </div>
+
+        <div class="palette-grid">
+          <div class="color-card" onclick="copyToken('var(--bg-base)', 'bgDark (#07080D)')">
+            <div class="color-swatch-large" style="background: var(--bg-base);">
+              <span class="copy-hint">📋 복사</span>
+            </div>
+            <div class="color-name">AppColors.bgDark</div>
+            <div class="color-code"><code>var(--bg-base)</code> <span>#07080D</span></div>
+            <div class="color-desc">앱 전체 심해 다크 기본 배경</div>
+          </div>
+
+          <div class="color-card" onclick="copyToken('var(--bg-surface-2)', 'bgSurface2 (#141724)')">
+            <div class="color-swatch-large" style="background: var(--bg-surface-2);">
+              <span class="copy-hint">📋 복사</span>
+            </div>
+            <div class="color-name">AppColors.bgSurface2</div>
+            <div class="color-code"><code>var(--bg-surface-2)</code> <span>#141724</span></div>
+            <div class="color-desc">서피스 카드, 트랙 타일 배경</div>
+          </div>
+
+          <div class="color-card" onclick="copyToken('var(--cyan-neon)', 'accentCyan (#00F0FF)')">
+            <div class="color-swatch-large" style="background: var(--cyan-neon);">
+              <span class="copy-hint">📋 복사</span>
+            </div>
+            <div class="color-name">AppColors.accentCyan</div>
+            <div class="color-code"><code>var(--cyan-neon)</code> <span>#00F0FF</span></div>
+            <div class="color-desc">네온 시안 악센트, 재생 상태, 포커스</div>
+          </div>
+
+          <div class="color-card" onclick="copyToken('var(--purple-neon)', 'accentPurple (#A855F7)')">
+            <div class="color-swatch-large" style="background: var(--purple-neon);">
+              <span class="copy-hint">📋 복사</span>
+            </div>
+            <div class="color-name">AppColors.accentPurple</div>
+            <div class="color-code"><code>var(--purple-neon)</code> <span>#A855F7</span></div>
+            <div class="color-desc">바이올렛 서브 악센트, 오프셋 배지</div>
+          </div>
+
+          <div class="color-card" onclick="copyToken('var(--pink-neon)', 'accentPink (#EC4899)')">
+            <div class="color-swatch-large" style="background: var(--pink-neon);">
+              <span class="copy-hint">📋 복사</span>
+            </div>
+            <div class="color-name">AppColors.accentPink</div>
+            <div class="color-code"><code>var(--pink-neon)</code> <span>#EC4899</span></div>
+            <div class="color-desc">그라디언트 하이라이트 포인트</div>
+          </div>
+
+          <div class="color-card" onclick="copyToken('var(--emerald-neon)', 'accentEmerald (#10B981)')">
+            <div class="color-swatch-large" style="background: var(--emerald-neon);">
+              <span class="copy-hint">📋 복사</span>
+            </div>
+            <div class="color-name">AppColors.accentEmerald</div>
+            <div class="color-code"><code>var(--emerald-neon)</code> <span>#10B981</span></div>
+            <div class="color-desc">VFS 성공, 무손실 용량, 정상 상태</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: VFS & 오디오 배지 -->
+      <section id="sec-badge" class="guide-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span>🏷️</span>
+            <span>2. VFS 스트리밍 상태 배지 & 오디오 코덱 칩</span>
+          </div>
+          <span class="section-badge">실제 앱 렌더링 스타일</span>
+        </div>
+
+        <div class="badge-grid">
+          <div class="badge-item-card">
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">VFS Ready 상태</div>
+              <div style="font-size: 11px; color: var(--text-muted);">ZIP 인덱스 구축 완료</div>
+            </div>
+            <span style="font-family: 'JetBrains Mono'; font-size: 11px; padding: 4px 8px; border-radius: 20px; background: var(--cyan-glow); color: var(--cyan-neon); border: 1px solid var(--border-bright);">● VFS Ready</span>
+          </div>
+
+          <div class="badge-item-card">
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">FLAC 24-bit 무손실</div>
+              <div style="font-size: 11px; color: var(--text-muted);">고해상도 오디오 포맷</div>
+            </div>
+            <span style="font-family: 'JetBrains Mono'; font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(0,240,255,0.15); color: var(--cyan-neon); border: 1px solid rgba(0,240,255,0.35);">FLAC</span>
+          </div>
+
+          <div class="badge-item-card">
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">VFS Offset 위치</div>
+              <div style="font-size: 11px; color: var(--text-muted);">인메모리 헤더 주소</div>
+            </div>
+            <span style="font-family: 'JetBrains Mono'; font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(168,85,247,0.15); color: var(--purple-neon); border: 1px solid rgba(168,85,247,0.35);">Offset 0x004A20</span>
+          </div>
+
+          <div class="badge-item-card">
+            <div>
+              <div style="font-size: 13px; font-weight: 700;">파일 크기 규격</div>
+              <div style="font-size: 11px; color: var(--text-muted);">청크 버퍼 메모리</div>
+            </div>
+            <span style="font-family: 'JetBrains Mono'; font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(16,185,129,0.15); color: var(--emerald-neon); border: 1px solid rgba(16,185,129,0.35);">42.8 MB</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: 타이포그래피 스케일 -->
+      <section id="sec-typo" class="guide-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span>🔤</span>
+            <span>3. 오디오 전용 타이포그래피 스케일 (Typography Hierarchy)</span>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-surface-1); border: 1px solid var(--border-glass); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+            <div>
+              <div style="font-family: 'Outfit'; font-size: 22px; font-weight: 800;">Track Title Heading (Outfit 22px / 800)</div>
+              <div style="font-size: 11px; color: var(--text-muted);">Now Playing 현재 재생 곡명 대형 헤더</div>
+            </div>
+            <code style="font-family: 'JetBrains Mono'; font-size: 11px; color: var(--cyan-neon);">Outfit / 22px / Bold</code>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
+            <div>
+              <div style="font-size: 15px; font-weight: 700;">Mini Player Track Title (Inter 15px / 700)</div>
+              <div style="font-size: 11px; color: var(--text-muted);">하단 미니바 및 트랙 리스트 제목</div>
+            </div>
+            <code style="font-family: 'JetBrains Mono'; font-size: 11px; color: var(--cyan-neon);">Inter / 15px / 700</code>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <div>
+              <div style="font-family: 'JetBrains Mono'; font-size: 12px; color: var(--text-muted);">01:24 / 04:15 • 0x004A20 • 96kHz 24-bit FLAC</div>
+              <div style="font-size: 11px; color: var(--text-muted);">타임스탬프, 바이트 오프셋, 기술 메타데이터</div>
+            </div>
+            <code style="font-family: 'JetBrains Mono'; font-size: 11px; color: var(--cyan-neon);">JetBrains Mono / 12px</code>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: 핵심 UI 컴포넌트 쇼케이스 -->
+      <section id="sec-comp" class="guide-section">
+        <div class="section-header">
+          <div class="section-title">
+            <span>🧩</span>
+            <span>4. 실제 구현 핵심 UI 컴포넌트 쇼케이스 (Living Components)</span>
+          </div>
+        </div>
+
+        <div class="comp-showcase-grid">
+          <!-- 1. 바이닐 쇼케이스 -->
+          <div class="comp-card">
+            <div class="comp-title"><span>💿</span> 120Hz 회전 바이닐 턴테이블</div>
+            <div class="mini-vinyl">
+              <div class="mini-label">🎵</div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); text-align: center;">
+              직경 220px • 네온 시안 블러 36px • 센터 라벨 80px
+            </div>
+          </div>
+
+          <!-- 2. 슬림 드롭존 쇼케이스 -->
+          <div class="comp-card">
+            <div class="comp-title"><span>📁</span> 슬림 드롭존 인라인 바</div>
+            <div style="padding: 10px 14px; border-radius: 12px; background: var(--bg-surface-2); border: 1px solid var(--border-bright); display: flex; align-items: center; gap: 10px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--cyan-glow); color: var(--cyan-neon); display: flex; align-items: center; justify-content: center; font-size: 16px;">📁</div>
+              <div style="flex: 1;">
+                <div style="font-size: 13px; font-weight: 600;">Album_FLAC_Archive.zip</div>
+                <div style="font-size: 11px; color: var(--text-muted);">24개 트랙 (18ms)</div>
+              </div>
+              <span style="font-size: 11px; font-weight: 600; color: var(--cyan-neon); background: var(--cyan-glow); padding: 4px 8px; border-radius: 6px;">⇆ 변경</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              높이 최소화로 플레이어 뷰 공간을 대폭 확보한 규격
+            </div>
+          </div>
+
+          <!-- 3. 미니 플레이어 제어 버튼 쇼케이스 -->
+          <div class="comp-card">
+            <div class="comp-title"><span>🎛️</span> 미니 플레이어 컨트롤러</div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 16px; padding: 12px; background: var(--bg-surface-2); border-radius: 14px;">
+              <button style="width: 38px; height: 38px; border-radius: 10px; background: transparent; border: none; color: var(--text-main); font-size: 20px; cursor: pointer;">⏮</button>
+              <button style="width: 44px; height: 44px; border-radius: 50%; background: var(--logo-gradient); border: none; color: #030712; font-size: 22px; cursor: pointer; box-shadow: 0 0 20px var(--cyan-glow);">⏸</button>
+              <button style="width: 38px; height: 38px; border-radius: 10px; background: transparent; border: none; color: var(--text-main); font-size: 20px; cursor: pointer;">⏭</button>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); text-align: center;">
+              42px 네온 원형 재생 버튼 & 34px 건너뛰기 버튼 체계
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toastBox" class="toast-box">
+  <span>📋</span>
+  <span id="toastMsg">토큰이 복사되었습니다.</span>
+</div>
+
+<script>
+  function changeTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('h2y_theme', theme);
+    document.getElementById('themeSelect').value = theme;
+  }
+
+  const savedTheme = localStorage.getItem('h2y_theme') || 'cyber';
+  changeTheme(savedTheme);
+
+  function copyToken(token, desc) {
+    navigator.clipboard.writeText(token).then(() => {
+      showToast(`CSS 토큰 [${token}] 복사 완료! (${desc})`);
+    }).catch(() => {
+      showToast(`토큰: ${token}`);
+    });
+  }
+
+  function showToast(msg) {
+    const box = document.getElementById('toastBox');
+    document.getElementById('toastMsg').innerText = msg;
+    box.style.display = 'flex';
+    setTimeout(() => { box.style.display = 'none'; }, 2200);
+  }
+</script>
+
+</body>
+</html>

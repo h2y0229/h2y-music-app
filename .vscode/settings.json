@@ -5,5 +5,6 @@
   "markdown.preview.fontWeight": "normal",
   "editor.stickyTabStops": false,
   "workbench.editor.showTabIndex": false,
-  "workbench.editor.wrapTabs": true
+  "workbench.editor.wrapTabs": true,
+  "liveServer.settings.port": 5501
 }

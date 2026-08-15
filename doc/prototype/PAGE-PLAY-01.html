@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="cyber">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎵 h2y Music Player - Now Playing (PAGE-PLAY-01)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Flutter AppColors 토큰과 100% 동일한 디자인 시스템 */
+    :root, [data-theme="cyber"] {
+      --bg-dark: #07080D;
+      --bg-surface-1: #0D0F18;
+      --bg-surface-2: #141724;
+      --bg-surface-3: #1C2032;
+      --glass-base: rgba(18, 22, 36, 0.60);
+      --glass-card: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.09);
+      --glass-border-bright: rgba(255, 255, 255, 0.20);
+      --accent-cyan: #00F0FF;
+      --accent-cyan-dim: rgba(0, 240, 255, 0.20);
+      --accent-purple: #A855F7;
+      --accent-purple-dim: rgba(168, 85, 247, 0.20);
+      --accent-pink: #EC4899;
+      --accent-emerald: #10B981;
+      --accent-amber: #F59E0B;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --accent-gradient: linear-gradient(135deg, #00F0FF 0%, #A855F7 50%, #EC4899 100%);
+      --vinyl-radial: radial-gradient(circle, #222436 0%, #0C0D15 70%, #1B1D2C 100%);
+    }
+
+    [data-theme="light"] {
+      --bg-dark: #F1F5F9;
+      --bg-surface-1: #FFFFFF;
+      --bg-surface-2: #E2E8F0;
+      --bg-surface-3: #CBD5E1;
+      --glass-base: rgba(255, 255, 255, 0.75);
+      --glass-card: rgba(255, 255, 255, 0.60);
+      --glass-border: rgba(0, 0, 0, 0.08);
+      --glass-border-bright: rgba(0, 0, 0, 0.16);
+      --accent-cyan: #0284C7;
+      --accent-cyan-dim: rgba(2, 132, 199, 0.15);
+      --accent-purple: #7C3AED;
+      --accent-purple-dim: rgba(124, 58, 237, 0.15);
+      --accent-pink: #DB2777;
+      --accent-emerald: #059669;
+      --accent-amber: #D97706;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+      --accent-gradient: linear-gradient(135deg, #0284C7 0%, #7C3AED 50%, #DB2777 100%);
+      --vinyl-radial: radial-gradient(circle, #E2E8F0 0%, #94A3B8 70%, #475569 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 16px;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Ambient Neon Glow Orbs */
+    .ambient-orb-1 {
+      position: fixed;
+      top: -100px;
+      left: -50px;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      opacity: 0.08;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-orb-2 {
+      position: fixed;
+      bottom: 60px;
+      right: -80px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: var(--accent-purple);
+      opacity: 0.08;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top Prototype Control Bar (테마 & 레이아웃 전환) */
+    .proto-controls {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      z-index: 10;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .proto-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--accent-cyan-dim);
+      color: var(--accent-cyan);
+      border: 1px solid var(--accent-cyan);
+      font-weight: 700;
+    }
+    .proto-btn-group { display: flex; align-items: center; gap: 6px; }
+    .proto-btn {
+      background: var(--glass-base);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .proto-btn:hover { color: var(--text-primary); border-color: var(--accent-cyan); }
+    .proto-btn.active { background: var(--accent-cyan-dim); color: var(--accent-cyan); border-color: var(--accent-cyan); }
+
+    /* App Shell Container (실제 Flutter 앱 레이아웃 래퍼) */
+    .app-shell {
+      width: 100%;
+      max-width: 480px; /* 기본 모바일 폭, Wide 모드 시 860px로 확장 */
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 5;
+      transition: max-width 0.3s ease;
+    }
+    .app-shell.wide-mode {
+      max-width: 860px;
+    }
+
+    /* Glass Container 공통 스타일 */
+    .glass-box {
+      background: var(--glass-base);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 1. Global Header */
+    .header-bar {
+      padding: 12px 16px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .header-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #030712;
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .header-title-wrap { display: flex; flex-direction: column; }
+    .header-title-row { display: flex; align-items: center; gap: 6px; }
+    .header-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .version-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent-cyan); font-weight: 700; }
+    .header-sub { font-size: 11px; color: var(--text-muted); }
+    .vfs-status-chip {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--accent-cyan-dim);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .vfs-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 6px var(--accent-cyan); }
+
+    /* 2. DropZone Bar (슬림화 규격) */
+    .dropzone-bar {
+      padding: 10px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      border-color: rgba(0, 240, 255, 0.4);
+      transition: all 0.2s;
+    }
+    .dropzone-bar:hover { background: rgba(255, 255, 255, 0.07); }
+    .zip-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--accent-cyan-dim);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .zip-info { flex: 1; min-width: 0; }
+    .zip-name { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .zip-desc { font-size: 11px; color: var(--text-muted); }
+    .zip-action-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--accent-cyan-dim);
+      border: 1px solid var(--glass-border-bright);
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* 3. Mobile Navigation Tabs */
+    .mobile-tab-row {
+      display: flex;
+      gap: 8px;
+    }
+    .nav-tab-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      background: var(--glass-base);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn.active {
+      background: var(--accent-cyan-dim);
+      color: var(--accent-cyan);
+      border-color: rgba(0, 240, 255, 0.4);
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0, 240, 255, 0.2);
+    }
+
+    /* 4. Wide Two-Column Container (태블릿/데스크톱) */
+    .wide-split-wrapper {
+      display: none;
+      gap: 16px;
+    }
+    .app-shell.wide-mode .wide-split-wrapper { display: flex; }
+    .app-shell.wide-mode .mobile-tab-row,
+    .app-shell.wide-mode .mobile-single-view { display: none; }
+    .wide-sidebar { width: 340px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+    .wide-main { flex: 1; display: flex; flex-direction: column; }
+
+    /* 5. Vinyl Visualizer Center Card (220px 바이닐 규격) */
+    .vinyl-card {
+      padding: 24px 16px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .vinyl-disk-wrapper {
+      width: 220px;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 20px;
+      cursor: pointer;
+    }
+    .vinyl-disk {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: var(--vinyl-radial);
+      border: 3.5px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 36px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: spinVinyl 15s linear infinite;
+    }
+    .vinyl-disk.paused { animation-play-state: paused; }
+    @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
+
+    .vinyl-center-label {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #030712;
+      font-size: 36px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .track-meta-title {
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-primary);
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+      max-width: 90%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .track-meta-path {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 14px;
+      max-width: 85%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Meta Badges (Flutter 일치) */
+    .badge-row { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 18px; }
+    .meta-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+    .badge-cyan { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0, 240, 255, 0.35); }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.35); }
+    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.35); }
+
+    /* Spectrum Bar Container (24개 그래디언트 바) */
+    .spectrum-box {
+      width: 100%;
+      max-width: 320px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      height: 48px;
+    }
+    .spec-bar {
+      width: 4px;
+      background: var(--accent-gradient);
+      border-radius: 2px;
+      height: 12px;
+      transition: height 0.1s ease;
+    }
+
+    /* 6. MiniPlayerBar (하단 플로팅 플레이어 바 - 100% 동일 규격) */
+    .mini-player {
+      padding: 14px 18px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mini-player-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cover-art-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      background: var(--bg-surface-3);
+      border: 1px solid var(--glass-border-bright);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .mini-track-info { flex: 1; min-width: 0; }
+    .mini-title { font-size: 15px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mini-artist { font-size: 13px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .mini-ctrl-btns { display: flex; align-items: center; gap: 4px; }
+    .btn-icon-sq {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-icon-sq:hover { background: rgba(255, 255, 255, 0.08); transform: scale(1.08); color: var(--accent-cyan); }
+    
+    .btn-play-neon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--accent-gradient);
+      border: none;
+      color: #030712;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+      transition: all 0.2s;
+    }
+    .btn-play-neon:hover { transform: scale(1.1); box-shadow: 0 0 26px rgba(0, 240, 255, 0.8); }
+
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .timeline-track {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+    .timeline-fill {
+      width: 35%;
+      height: 100%;
+      background: var(--accent-cyan);
+      border-radius: 4px;
+      position: relative;
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+    .timeline-thumb {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      border: 2px solid var(--accent-cyan);
+      position: absolute;
+      right: -6px;
+      top: -4px;
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Orbs -->
+  <div class="ambient-orb-1"></div>
+  <div class="ambient-orb-2"></div>
+
+  <!-- Top Prototype Control Bar -->
+  <div class="proto-controls">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="proto-badge">PAGE-PLAY-01</span>
+      <span style="font-size: 12px; color: var(--text-muted);">Now Playing 프로토타입</span>
+    </div>
+
+    <div class="proto-btn-group">
+      <button id="layoutToggleBtn" class="proto-btn" onclick="toggleLayout()">📱 모바일 뷰 (480px)</button>
+      <button class="proto-btn" onclick="toggleTheme()">🎨 <span id="themeLabel">다크 테마</span></button>
+      <a href="../05-디자인가이드.html" class="proto-btn">🎨 디자인가이드</a>
+    </div>
+  </div>
+
+  <!-- App Shell Container -->
+  <div id="appShell" class="app-shell">
+
+    <!-- 1. Global Header Bar -->
+    <div class="glass-box header-bar">
+      <div class="header-left">
+        <div class="header-logo-icon">⚡</div>
+        <div class="header-title-wrap">
+          <div class="header-title-row">
+            <span class="header-title">h2y Music Player</span>
+            <span class="version-tag">v0.0.1</span>
+          </div>
+          <span class="header-sub">ZIP 무해제 온디맨드 스트리밍 플레이어</span>
+        </div>
+      </div>
+      <div class="vfs-status-chip">
+        <div class="vfs-dot"></div>
+        <span>VFS Ready</span>
+      </div>
+    </div>
+
+    <!-- 2. DropZone Bar (슬림화 규격) -->
+    <div class="glass-box dropzone-bar" onclick="alert('file_picker: 압축 파일(ZIP) 열기 다이얼로그 호출')">
+      <div class="zip-icon-box">📁</div>
+      <div class="zip-info">
+        <div class="zip-name">Album_FLAC_Archive_2026.zip</div>
+        <div class="zip-desc">트랙 24개 (18ms) • 변경하려면 터치</div>
+      </div>
+      <div class="zip-action-badge">
+        <span>⇆</span>
+        <span>변경</span>
+      </div>
+    </div>
+
+    <!-- 3. Mobile Navigation Tab Bar -->
+    <div class="mobile-tab-row">
+      <a href="PAGE-PLAY-01.html" class="nav-tab-btn active">
+        <span>💿</span>
+        <span>Now Playing</span>
+      </a>
+      <a href="PAGE-TRACK-01.html" class="nav-tab-btn">
+        <span>📜</span>
+        <span>Track List (24)</span>
+      </a>
+      <a href="PAGE-LYRICS-01.html" class="nav-tab-btn">
+        <span>🎤</span>
+        <span>Lyrics</span>
+      </a>
+      <a href="PAGE-EQ-01.html" class="nav-tab-btn">
+        <span>🎚️</span>
+        <span>EQ</span>
+      </a>
+    </div>
+
+    <!-- 4. Single Column Center Body (Mobile View) -->
+    <div class="mobile-single-view">
+      <div class="glass-box vinyl-card">
+        <!-- Rotating Vinyl LP Turntable -->
+        <div class="vinyl-disk-wrapper" onclick="togglePlay()">
+          <div id="vinylDisk" class="vinyl-disk">
+            <div class="vinyl-center-label">🎵</div>
+          </div>
+        </div>
+
+        <!-- Track Metadata -->
+        <div id="trackTitle" class="track-meta-title">Track 01. Cyber City Night.flac</div>
+        <div id="trackPath" class="track-meta-path">/Music/FLAC/Track 01. Cyber City Night.flac</div>
+
+        <!-- Badges -->
+        <div class="badge-row">
+          <span class="meta-badge badge-cyan">FLAC</span>
+          <span class="meta-badge badge-purple">Offset 0x004A20</span>
+          <span class="meta-badge badge-emerald">42.8 MB</span>
+        </div>
+
+        <!-- Spectrum Visualizer (24 Bars) -->
+        <div class="glass-box spectrum-box" id="spectrumBox">
+          <!-- JS generated 24 bars -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Wide Two-Column View (Tablet/Desktop View) -->
+    <div class="wide-split-wrapper">
+      <div class="wide-sidebar">
+        <!-- Mini Track List Preview in Wide mode -->
+        <div class="glass-box" style="padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 13px; font-weight: 700; color: var(--accent-cyan); display: flex; justify-content: space-between;">
+            <span>트랙 목록 (24)</span>
+            <a href="PAGE-TRACK-01.html" style="font-size: 11px; color: var(--text-muted); text-decoration: none;">전체보기 ↗</a>
+          </div>
+          <div style="font-size: 12px; padding: 8px; border-radius: 8px; background: var(--accent-cyan-dim); color: var(--accent-cyan); font-weight: 600;">
+            ▶ 01. Track 01. Cyber City Night.flac
+          </div>
+          <div style="font-size: 12px; padding: 8px; border-radius: 8px; background: var(--glass-card); color: var(--text-primary);">
+            02. Track 02. Neon Highway.mp3
+          </div>
+          <div style="font-size: 12px; padding: 8px; border-radius: 8px; background: var(--glass-card); color: var(--text-primary);">
+            03. Track 03. Midnight Rain.flac
+          </div>
+        </div>
+      </div>
+
+      <div class="wide-main">
+        <div class="glass-box vinyl-card">
+          <div class="vinyl-disk-wrapper" onclick="togglePlay()">
+            <div id="vinylDiskWide" class="vinyl-disk">
+              <div class="vinyl-center-label">🎵</div>
+            </div>
+          </div>
+          <div class="track-meta-title">Track 01. Cyber City Night.flac</div>
+          <div class="track-meta-path">/Music/FLAC/Track 01. Cyber City Night.flac</div>
+          <div class="badge-row">
+            <span class="meta-badge badge-cyan">FLAC</span>
+            <span class="meta-badge badge-purple">Offset 0x004A20</span>
+            <span class="meta-badge badge-emerald">42.8 MB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. MiniPlayerBar (하단 플로팅 플레이어 바) -->
+    <div class="glass-box mini-player">
+      <div class="mini-player-top">
+        <div class="cover-art-box">🎵</div>
+        <div class="mini-track-info">
+          <div id="miniTitle" class="mini-title">Track 01. Cyber City Night</div>
+          <div id="miniArtist" class="mini-artist">Neon Horizon • Future Sound</div>
+        </div>
+        <div class="mini-ctrl-btns">
+          <button class="btn-icon-sq" title="이전 곡" onclick="prevTrack()">⏮</button>
+          <button id="mainPlayBtn" class="btn-play-neon" onclick="togglePlay()">⏸</button>
+          <button class="btn-icon-sq" title="다음 곡" onclick="nextTrack()">⏭</button>
+        </div>
+      </div>
+
+      <div class="timeline-row">
+        <span id="posTime">01:24</span>
+        <div class="timeline-track" onclick="seekTimeline(event)">
+          <div id="timelineFill" class="timeline-fill">
+            <div class="timeline-thumb"></div>
+          </div>
+        </div>
+        <span>04:15</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Play/Pause Toggle State
+    let isPlaying = true;
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      const disk1 = document.getElementById('vinylDisk');
+      const disk2 = document.getElementById('vinylDiskWide');
+      const btn = document.getElementById('mainPlayBtn');
+      if (isPlaying) {
+        disk1.classList.remove('paused');
+        if (disk2) disk2.classList.remove('paused');
+        btn.innerText = '⏸';
+      } else {
+        disk1.classList.add('paused');
+        if (disk2) disk2.classList.add('paused');
+        btn.innerText = '▶';
+      }
+    }
+
+    // Generate 24 Spectrum Bars
+    const specBox = document.getElementById('spectrumBox');
+    for (let i = 0; i < 24; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'spec-bar';
+      bar.style.height = `${Math.floor(Math.random() * 26) + 8}px`;
+      specBox.appendChild(bar);
+    }
+
+    // Spectrum Animation loop
+    let tick = 0;
+    setInterval(() => {
+      if (!isPlaying) return;
+      tick += 0.2;
+      const bars = specBox.children;
+      for (let i = 0; i < bars.length; i++) {
+        const h = Math.max(6, Math.min(36, Math.sin(i * 0.5 + tick) * 14 + 18));
+        bars[i].style.height = `${h}px`;
+      }
+    }, 100);
+
+    // Responsive Wide / Mobile Layout Switcher
+    let isWide = false;
+    function toggleLayout() {
+      isWide = !isWide;
+      const shell = document.getElementById('appShell');
+      const btn = document.getElementById('layoutToggleBtn');
+      if (isWide) {
+        shell.classList.add('wide-mode');
+        btn.innerText = '💻 데스크톱 뷰 (860px)';
+        btn.classList.add('active');
+      } else {
+        shell.classList.remove('wide-mode');
+        btn.innerText = '📱 모바일 뷰 (480px)';
+        btn.classList.remove('active');
+      }
+    }
+
+    // Dark / Light Theme Switcher
+    let isDark = true;
+    function toggleTheme() {
+      isDark = !isDark;
+      const theme = isDark ? 'cyber' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('themeLabel').innerText = isDark ? '다크 테마' : '라이트 테마';
+    }
+
+    function seekTimeline(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      document.getElementById('timelineFill').style.width = `${pct * 100}%`;
+    }
+
+    const sampleTracks = [
+      { title: "Track 01. Cyber City Night.flac", artist: "Neon Horizon • Future Sound", offset: "0x004A20", size: "42.8 MB" },
+      { title: "Track 02. Neon Highway.mp3", artist: "Synthwave Collective • Retro", offset: "0x02CD50", size: "11.2 MB" },
+      { title: "Track 03. Midnight Rain.flac", artist: "Acoustic Cafe • Vol.2", offset: "0x04F180", size: "38.5 MB" }
+    ];
+    let currIdx = 0;
+    function nextTrack() {
+      currIdx = (currIdx + 1) % sampleTracks.length;
+      updateTrack();
+    }
+    function prevTrack() {
+      currIdx = (currIdx - 1 + sampleTracks.length) % sampleTracks.length;
+      updateTrack();
+    }
+    function updateTrack() {
+      const t = sampleTracks[currIdx];
+      document.getElementById('trackTitle').innerText = t.title;
+      document.getElementById('trackPath').innerText = `/Music/FLAC/${t.title}`;
+      document.getElementById('miniTitle').innerText = t.title.replace(/\.[^.]+$/, '');
+      document.getElementById('miniArtist').innerText = t.artist;
+      document.getElementById('timelineFill').style.width = '0%';
+    }
+  </script>
+</body>
+</html>

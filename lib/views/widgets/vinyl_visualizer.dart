@@ -100,8 +100,8 @@ class _VinylVisualizerState extends State<VinylVisualizer>
               );
             },
             child: Container(
-              width: 190,
-              height: 190,
+              width: 220,
+              height: 220,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: const RadialGradient(
@@ -114,20 +114,20 @@ class _VinylVisualizerState extends State<VinylVisualizer>
                 ),
                 border: Border.all(
                   color: Colors.white.withValues(alpha: 0.15),
-                  width: 3,
+                  width: 3.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accentCyan.withValues(alpha: 0.25),
-                    blurRadius: 30,
-                    spreadRadius: 2,
+                    color: AppColors.accentCyan.withValues(alpha: 0.3),
+                    blurRadius: 36,
+                    spreadRadius: 3,
                   ),
                 ],
               ),
               child: Center(
                 child: Container(
-                  width: 70,
-                  height: 70,
+                  width: 80,
+                  height: 80,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: AppColors.accentGradient,
@@ -136,7 +136,7 @@ class _VinylVisualizerState extends State<VinylVisualizer>
                     child: Icon(
                       Icons.music_note_rounded,
                       color: Color(0xFF030712),
-                      size: 32,
+                      size: 38,
                     ),
                   ),
                 ),

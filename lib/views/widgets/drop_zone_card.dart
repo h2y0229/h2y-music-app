@@ -13,31 +13,27 @@ class DropZoneCard extends StatelessWidget {
 
     if (vfs.isLoading) {
       return const GlassContainer(
-        padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        borderRadius: 12.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 32,
-              height: 32,
+              width: 18,
+              height: 18,
               child: CircularProgressIndicator(
-                strokeWidth: 3,
+                strokeWidth: 2.5,
                 valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCyan),
               ),
             ),
-            SizedBox(height: 12),
+            SizedBox(width: 12),
             Text(
-              'VFS Range Read 인덱싱 중...',
+              'VFS Range Read 헤더 분석 중...',
               style: TextStyle(
                 color: AppColors.accentCyan,
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontSize: 13,
               ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              '디스크 무해제 헤더 분석 중',
-              style: TextStyle(color: AppColors.textMuted, fontSize: 12),
             ),
           ],
         ),
@@ -49,95 +45,84 @@ class DropZoneCard extends StatelessWidget {
     return GlassContainer(
       onTap: () => vfs.pickArchiveFile(),
       borderColor: hasArchive ? AppColors.accentCyan.withValues(alpha: 0.4) : AppColors.glassBorder,
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+      borderRadius: 12.0,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.accentCyanDim,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.accentCyan.withValues(alpha: 0.4)),
-                ),
-                child: const Icon(
-                  Icons.folder_zip_rounded,
-                  color: AppColors.accentCyan,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      hasArchive ? vfs.currentAnalysis!.fileName : '압축 파일 선택 (ZIP)',
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      hasArchive
-                          ? '엔트리 ${vfs.currentAnalysis!.entryCount}개 (${vfs.currentAnalysis!.analysisTimeMs}ms)'
-                          : '디스크 해제 없이 즉시 스트리밍 재생',
-                      style: const TextStyle(
-                        color: AppColors.textMuted,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.file_upload_outlined,
-                color: AppColors.textSecondary,
-                size: 20,
-              ),
-            ],
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: AppColors.accentCyanDim,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.accentCyan.withValues(alpha: 0.3)),
+            ),
+            child: const Icon(
+              Icons.folder_zip_rounded,
+              color: AppColors.accentCyan,
+              size: 20,
+            ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildBadge('ZIP', AppColors.accentCyan, AppColors.accentCyanDim),
-              const SizedBox(width: 6),
-              _buildBadge('7Z', AppColors.accentPurple, AppColors.accentPurpleDim),
-              const SizedBox(width: 6),
-              _buildBadge('RAR', AppColors.accentCyan, AppColors.accentCyanDim),
-              const SizedBox(width: 6),
-              _buildBadge('TAR', AppColors.accentPurple, AppColors.accentPurpleDim),
-            ],
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  hasArchive ? vfs.currentAnalysis!.fileName : '압축 파일 선택 (ZIP / 7Z / RAR)',
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  hasArchive
+                      ? '트랙 ${vfs.currentAnalysis!.entryCount}개 (${vfs.currentAnalysis!.analysisTimeMs}ms) • 변경하려면 터치'
+                      : '디스크 무해제 온디맨드 스트리밍',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 11,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: hasArchive ? AppColors.accentCyanDim : AppColors.bgSurface3,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: AppColors.glassBorderBright),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  hasArchive ? Icons.swap_horiz_rounded : Icons.file_upload_outlined,
+                  color: hasArchive ? AppColors.accentCyan : AppColors.textSecondary,
+                  size: 14,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  hasArchive ? '변경' : '열기',
+                  style: TextStyle(
+                    color: hasArchive ? AppColors.accentCyan : AppColors.textSecondary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBadge(String label, Color textColor, Color bgColor) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: textColor.withValues(alpha: 0.3)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'monospace',
-        ),
       ),
     );
   }

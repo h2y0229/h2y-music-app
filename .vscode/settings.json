@@ -1,0 +1,9 @@
+{
+  "editor.codeActionsOnSave": {},
+  "markdown.preview.fontFamily": "Inconsolata",
+  "markdown.preview.fontSize": 13,
+  "markdown.preview.fontWeight": "normal",
+  "editor.stickyTabStops": false,
+  "workbench.editor.showTabIndex": false,
+  "workbench.editor.wrapTabs": true
+}

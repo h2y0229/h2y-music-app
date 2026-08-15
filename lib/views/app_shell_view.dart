@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../core/theme/app_colors.dart';
 import 'widgets/drop_zone_card.dart';
 import 'widgets/glass_container.dart';
@@ -15,6 +16,24 @@ class AppShellView extends StatefulWidget {
 
 class _AppShellViewState extends State<AppShellView> {
   int _selectedMobileTab = 0; // 0: Now Playing, 1: Track List
+  String _appVersion = 'v0.0.1';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _appVersion = 'v${info.version}';
+        });
+      }
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,19 +118,34 @@ class _AppShellViewState extends State<AppShellView> {
               child: const Icon(Icons.flash_on_rounded, color: Color(0xFF030712), size: 18),
             ),
             const SizedBox(width: 10),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'h2y Music Player',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                  ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'h2y Music Player',
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _appVersion,
+                      style: const TextStyle(
+                        color: AppColors.accentCyan,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
+                const Text(
                   'ZIP 무해제 온디맨드 스트리밍 플레이어',
                   style: TextStyle(
                     color: AppColors.textMuted,

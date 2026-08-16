@@ -50,6 +50,7 @@ export interface WorkerResponseMessage {
 - [x] Web Worker 메시징 규격 정의 완료 (`src/types/worker.ts`)
 - [x] Transferable Object 메모리 제로카피 전송 설계 및 Worker 구현 완료 (`src/workers/ArchiveStreamWorker.ts`)
 - [x] 메인 스레드 비동기 RPC 브리지 구현 완료 (`src/engine/archive/WorkerBridge.ts`)
+- [x] **사용 라이브러리 및 오픈소스 라이선스 적합성 검증 완료** (상용 배포 가능 여부 및 GPL 감염 위험 배제)
 - [x] Web Worker 빌드 및 번들링 정상 동작 검증 완료
 
 ---

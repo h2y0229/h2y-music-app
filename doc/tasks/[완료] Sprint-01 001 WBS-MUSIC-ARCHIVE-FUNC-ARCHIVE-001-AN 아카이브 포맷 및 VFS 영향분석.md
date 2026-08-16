@@ -49,6 +49,7 @@
 - [x] ZIP/7Z/RAR 포맷별 Magic Number 및 Central Directory 헤더 구조 분석서 작성 완료
 - [x] VFS 가상 트리 노드 데이터 모델(`VFSEntry`, `VFSTreeNode`) 정의 완료
 - [x] 대용량 파일 Range Read 최적화 알고리즘(`analyzeZip`) 구현 완료
+- [x] **사용 라이브러리 및 오픈소스 라이선스 적합성 검증 완료** (Flutter/Dart SDK 및 archive/just_audio 등 13종 전수 Permissive 라이선스 확인)
 - [x] Node LTS(v20+) 환경 및 Vite + TypeScript 개발 환경 구성 완료
 
 ---

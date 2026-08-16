@@ -40,6 +40,7 @@
 - [x] Glassmorphism 아크릴 패널 및 네온 글로우 스타일 구현 완료 (`src/styles/glassmorphism.css`)
 - [x] 반응형 3단 그리드 레이아웃 명세 및 반응형 브레이크포인트 구현 완료 (`src/styles/layout.css`)
 - [x] Pretendard, Inter, JetBrains Mono 웹 폰트 로드 환경 구성 완료
+- [x] **사용 라이브러리 및 오픈소스 라이선스 적합성 검증 완료** (웹 폰트 및 CSS 라이브러리 상용 적합성 확인)
 
 ---
 

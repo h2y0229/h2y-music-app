@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="cyber">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,34 +7,12 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     /* Flutter AppColors 토큰과 100% 동일한 디자인 시스템 */
-    :root, [data-theme="cyber"] {
-      --bg-dark: #07080D;
-      --bg-surface-1: #0D0F18;
-      --bg-surface-2: #141724;
-      --bg-surface-3: #1C2032;
-      --glass-base: rgba(18, 22, 36, 0.60);
-      --glass-card: rgba(255, 255, 255, 0.04);
-      --glass-border: rgba(255, 255, 255, 0.09);
-      --glass-border-bright: rgba(255, 255, 255, 0.20);
-      --accent-cyan: #00F0FF;
-      --accent-cyan-dim: rgba(0, 240, 255, 0.20);
-      --accent-purple: #A855F7;
-      --accent-purple-dim: rgba(168, 85, 247, 0.20);
-      --accent-pink: #EC4899;
-      --accent-emerald: #10B981;
-      --accent-amber: #F59E0B;
-      --text-primary: #F8FAFC;
-      --text-secondary: #94A3B8;
-      --text-muted: #64748B;
-      --accent-gradient: linear-gradient(135deg, #00F0FF 0%, #A855F7 50%, #EC4899 100%);
-      --fader-track: #1C2032;
-    }
-
-    [data-theme="light"] {
+    :root, [data-theme="light"] {
       --bg-dark: #F1F5F9;
       --bg-surface-1: #FFFFFF;
       --bg-surface-2: #E2E8F0;
@@ -57,9 +35,32 @@
       --fader-track: #E2E8F0;
     }
 
+    [data-theme="cyber"] {
+      --bg-dark: #07080D;
+      --bg-surface-1: #0D0F18;
+      --bg-surface-2: #141724;
+      --bg-surface-3: #1C2032;
+      --glass-base: rgba(18, 22, 36, 0.60);
+      --glass-card: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.09);
+      --glass-border-bright: rgba(255, 255, 255, 0.20);
+      --accent-cyan: #00F0FF;
+      --accent-cyan-dim: rgba(0, 240, 255, 0.20);
+      --accent-purple: #A855F7;
+      --accent-purple-dim: rgba(168, 85, 247, 0.20);
+      --accent-pink: #EC4899;
+      --accent-emerald: #10B981;
+      --accent-amber: #F59E0B;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --accent-gradient: linear-gradient(135deg, #00F0FF 0%, #A855F7 50%, #EC4899 100%);
+      --fader-track: #1C2032;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
       background: var(--bg-dark);
       color: var(--text-primary);
       min-height: 100vh;
@@ -221,18 +222,7 @@
       </div>
     </div>
 
-    <!-- 2. DropZone Bar -->
-    <div class="glass-box dropzone-bar" onclick="alert('file_picker 호출')">
-      <div class="zip-icon-box">📁</div>
-      <div class="zip-info">
-        <div class="zip-name">Album_FLAC_Archive_2026.zip</div>
-        <div class="zip-desc">트랙 24개 (18ms) • 변경하려면 터치</div>
-      </div>
-      <div class="zip-action-badge">
-        <span>⇆</span>
-        <span>변경</span>
-      </div>
-    </div>
+
 
     <!-- 3. Navigation Tabs -->
     <div class="mobile-tab-row">
@@ -308,7 +298,7 @@
   </div>
 
   <script>
-    let isDark = true;
+    let isDark = false;
     function toggleTheme() {
       isDark = !isDark;
       const theme = isDark ? 'cyber' : 'light';

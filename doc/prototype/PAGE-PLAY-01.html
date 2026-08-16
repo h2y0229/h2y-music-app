@@ -1,761 +1,2021 @@
-<!DOCTYPE html>
-<html lang="ko" data-theme="cyber">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎵 h2y Music Player - Now Playing (PAGE-PLAY-01)</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <style>
-    /* Flutter AppColors 토큰과 100% 동일한 디자인 시스템 */
-    :root, [data-theme="cyber"] {
-      --bg-dark: #07080D;
-      --bg-surface-1: #0D0F18;
-      --bg-surface-2: #141724;
-      --bg-surface-3: #1C2032;
-      --glass-base: rgba(18, 22, 36, 0.60);
-      --glass-card: rgba(255, 255, 255, 0.04);
-      --glass-border: rgba(255, 255, 255, 0.09);
-      --glass-border-bright: rgba(255, 255, 255, 0.20);
-      --accent-cyan: #00F0FF;
-      --accent-cyan-dim: rgba(0, 240, 255, 0.20);
-      --accent-purple: #A855F7;
-      --accent-purple-dim: rgba(168, 85, 247, 0.20);
-      --accent-pink: #EC4899;
-      --accent-emerald: #10B981;
-      --accent-amber: #F59E0B;
-      --text-primary: #F8FAFC;
-      --text-secondary: #94A3B8;
-      --text-muted: #64748B;
-      --accent-gradient: linear-gradient(135deg, #00F0FF 0%, #A855F7 50%, #EC4899 100%);
-      --vinyl-radial: radial-gradient(circle, #222436 0%, #0C0D15 70%, #1B1D2C 100%);
-    }
+<!doctype html>
+<html lang="ko" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>h2y Music - Playlist Centric Modern Player</title>
 
-    [data-theme="light"] {
-      --bg-dark: #F1F5F9;
-      --bg-surface-1: #FFFFFF;
-      --bg-surface-2: #E2E8F0;
-      --bg-surface-3: #CBD5E1;
-      --glass-base: rgba(255, 255, 255, 0.75);
-      --glass-card: rgba(255, 255, 255, 0.60);
-      --glass-border: rgba(0, 0, 0, 0.08);
-      --glass-border-bright: rgba(0, 0, 0, 0.16);
-      --accent-cyan: #0284C7;
-      --accent-cyan-dim: rgba(2, 132, 199, 0.15);
-      --accent-purple: #7C3AED;
-      --accent-purple-dim: rgba(124, 58, 237, 0.15);
-      --accent-pink: #DB2777;
-      --accent-emerald: #059669;
-      --accent-amber: #D97706;
-      --text-primary: #0F172A;
-      --text-secondary: #475569;
-      --text-muted: #64748B;
-      --accent-gradient: linear-gradient(135deg, #0284C7 0%, #7C3AED 50%, #DB2777 100%);
-      --vinyl-radial: radial-gradient(circle, #E2E8F0 0%, #94A3B8 70%, #475569 100%);
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-primary);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      overflow-x: hidden;
-      padding: 16px;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
+    <style>
+      /* ==========================================================================
+       1. 디자인 토큰: 모던 미니멀 슬레이트 시스템 (Modern Slate Design System)
+       ========================================================================== */
+      :root,
+      [data-theme="light"] {
+        --bg-main: #f8fafc;
+        --bg-sidebar: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f1f5f9;
+        --bg-card-active: #e2e8f0;
+        --border-subtle: #e2e8f0;
+        --border-focus: #0284c7;
 
-    /* Ambient Neon Glow Orbs */
-    .ambient-orb-1 {
-      position: fixed;
-      top: -100px;
-      left: -50px;
-      width: 380px;
-      height: 380px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      opacity: 0.08;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .ambient-orb-2 {
-      position: fixed;
-      bottom: 60px;
-      right: -80px;
-      width: 420px;
-      height: 420px;
-      border-radius: 50%;
-      background: var(--accent-purple);
-      opacity: 0.08;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
-    }
+        --accent-primary: #0284c7;
+        --accent-primary-hover: #0369a1;
+        --accent-primary-dim: rgba(2, 132, 199, 0.1);
+        --accent-secondary: #6366f1;
+        --accent-emerald: #059669;
+        --accent-rose: #e11d48;
+        --accent-amber: #d97706;
+        --accent-gradient: linear-gradient(135deg, #0284c7 0%, #7c3aed 50%, #db2777 100%);
 
-    /* Top Prototype Control Bar (테마 & 레이아웃 전환) */
-    .proto-controls {
-      width: 100%;
-      max-width: 860px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      z-index: 10;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .proto-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: var(--accent-cyan-dim);
-      color: var(--accent-cyan);
-      border: 1px solid var(--accent-cyan);
-      font-weight: 700;
-    }
-    .proto-btn-group { display: flex; align-items: center; gap: 6px; }
-    .proto-btn {
-      background: var(--glass-base);
-      border: 1px solid var(--glass-border);
-      color: var(--text-secondary);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(12px);
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .proto-btn:hover { color: var(--text-primary); border-color: var(--accent-cyan); }
-    .proto-btn.active { background: var(--accent-cyan-dim); color: var(--accent-cyan); border-color: var(--accent-cyan); }
+        --text-main: #0f172a;
+        --text-muted: #475569;
+        --text-dim: #94a3b8;
 
-    /* App Shell Container (실제 Flutter 앱 레이아웃 래퍼) */
-    .app-shell {
-      width: 100%;
-      max-width: 480px; /* 기본 모바일 폭, Wide 모드 시 860px로 확장 */
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 5;
-      transition: max-width 0.3s ease;
-    }
-    .app-shell.wide-mode {
-      max-width: 860px;
-    }
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
 
-    /* Glass Container 공통 스타일 */
-    .glass-box {
-      background: var(--glass-base);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --radius-full: 9999px;
 
-    /* 1. Global Header */
-    .header-bar {
-      padding: 12px 16px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .header-left { display: flex; align-items: center; gap: 10px; }
-    .header-logo-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: var(--accent-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #030712;
-      font-size: 16px;
-      font-weight: 800;
-    }
-    .header-title-wrap { display: flex; flex-direction: column; }
-    .header-title-row { display: flex; align-items: center; gap: 6px; }
-    .header-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
-    .version-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent-cyan); font-weight: 700; }
-    .header-sub { font-size: 11px; color: var(--text-muted); }
-    .vfs-status-chip {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: var(--accent-cyan-dim);
-      border: 1px solid rgba(0, 240, 255, 0.4);
-      color: var(--accent-cyan);
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .vfs-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 6px var(--accent-cyan); }
+        --player-bar-height: 104px;
+      }
 
-    /* 2. DropZone Bar (슬림화 규격) */
-    .dropzone-bar {
-      padding: 10px 14px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      border-color: rgba(0, 240, 255, 0.4);
-      transition: all 0.2s;
-    }
-    .dropzone-bar:hover { background: rgba(255, 255, 255, 0.07); }
-    .zip-icon-box {
-      width: 34px;
-      height: 34px;
-      border-radius: 8px;
-      background: var(--accent-cyan-dim);
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-cyan);
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    .zip-info { flex: 1; min-width: 0; }
-    .zip-name { font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .zip-desc { font-size: 11px; color: var(--text-muted); }
-    .zip-action-badge {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: var(--accent-cyan-dim);
-      border: 1px solid var(--glass-border-bright);
-      color: var(--accent-cyan);
-      font-size: 11px;
-      font-weight: 600;
-    }
+      [data-theme="dark"] {
+        --bg-main: #090d16;
+        --bg-sidebar: #0d1322;
+        --bg-card: #131a2d;
+        --bg-card-hover: #1a243d;
+        --bg-card-active: #202d4c;
+        --border-subtle: #1e293b;
+        --border-focus: #38bdf8;
 
-    /* 3. Mobile Navigation Tabs */
-    .mobile-tab-row {
-      display: flex;
-      gap: 8px;
-    }
-    .nav-tab-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 12px;
-      background: var(--glass-base);
-      border: 1px solid var(--glass-border);
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .nav-tab-btn.active {
-      background: var(--accent-cyan-dim);
-      color: var(--accent-cyan);
-      border-color: rgba(0, 240, 255, 0.4);
-      font-weight: 700;
-      box-shadow: 0 4px 14px rgba(0, 240, 255, 0.2);
-    }
+        --accent-primary: #38bdf8; /* Sky Blue */
+        --accent-primary-hover: #0ea5e9;
+        --accent-primary-dim: rgba(56, 189, 248, 0.12);
+        --accent-secondary: #818cf8; /* Indigo */
+        --accent-emerald: #34d399; /* Success/Saved */
+        --accent-rose: #fb7185; /* Delete */
+        --accent-amber: #fbbf24;
+        --accent-gradient: linear-gradient(135deg, #00f0ff 0%, #a855f7 50%, #ec4899 100%);
 
-    /* 4. Wide Two-Column Container (태블릿/데스크톱) */
-    .wide-split-wrapper {
-      display: none;
-      gap: 16px;
-    }
-    .app-shell.wide-mode .wide-split-wrapper { display: flex; }
-    .app-shell.wide-mode .mobile-tab-row,
-    .app-shell.wide-mode .mobile-single-view { display: none; }
-    .wide-sidebar { width: 340px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
-    .wide-main { flex: 1; display: flex; flex-direction: column; }
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --text-dim: #64748b;
 
-    /* 5. Vinyl Visualizer Center Card (220px 바이닐 규격) */
-    .vinyl-card {
-      padding: 24px 16px;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-    
-    .vinyl-disk-wrapper {
-      width: 220px;
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 8px 0 20px;
-      cursor: pointer;
-    }
-    .vinyl-disk {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background: var(--vinyl-radial);
-      border: 3.5px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 36px rgba(0, 240, 255, 0.3), inset 0 0 20px rgba(0,0,0,0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      animation: spinVinyl 15s linear infinite;
-    }
-    .vinyl-disk.paused { animation-play-state: paused; }
-    @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+      }
 
-    .vinyl-center-label {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--accent-gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #030712;
-      font-size: 36px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-    }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+      body {
+        font-family:
+          "Pretendard Variable",
+          "Pretendard",
+          -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          Roboto,
+          "Helvetica Neue",
+          "Segoe UI",
+          "Apple SD Gothic Neo",
+          "Noto Sans KR",
+          "Malgun Gothic",
+          sans-serif;
+        background: var(--bg-main);
+        color: var(--text-main);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease;
+        -webkit-font-smoothing: antialiased;
+      }
 
-    .track-meta-title {
-      font-size: 18px;
-      font-weight: 700;
-      text-align: center;
-      color: var(--text-primary);
-      letter-spacing: -0.3px;
-      margin-bottom: 4px;
-      max-width: 90%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .track-meta-path {
-      font-size: 12px;
-      color: var(--text-secondary);
-      text-align: center;
-      margin-bottom: 14px;
-      max-width: 85%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      /* ==========================================================================
+       2. 상단 글로벌 네비게이션 & 검색 헤더
+       ========================================================================== */
+      .app-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 24px;
+        background: var(--bg-sidebar);
+        border-bottom: 1px solid var(--border-subtle);
+        position: sticky;
+        top: 0;
+        flex-shrink: 0;
+        z-index: 50;
+      }
 
-    /* Meta Badges (Flutter 일치) */
-    .badge-row { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 18px; }
-    .meta-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-    .badge-cyan { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0, 240, 255, 0.35); }
-    .badge-purple { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.35); }
-    .badge-emerald { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.35); }
+      .brand-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 220px;
+      }
+      .brand-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: var(--radius-md);
+        background: linear-gradient(
+          135deg,
+          var(--accent-primary) 0%,
+          var(--accent-secondary) 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 16px;
+        box-shadow: 0 2px 8px rgba(56, 189, 248, 0.25);
+      }
+      .brand-text h1 {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .brand-text p {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-family: "JetBrains Mono", monospace;
+      }
 
-    /* Spectrum Bar Container (24개 그래디언트 바) */
-    .spectrum-box {
-      width: 100%;
-      max-width: 320px;
-      padding: 12px 16px;
-      border-radius: 14px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      height: 48px;
-    }
-    .spec-bar {
-      width: 4px;
-      background: var(--accent-gradient);
-      border-radius: 2px;
-      height: 12px;
-      transition: height 0.1s ease;
-    }
+      .search-box-wrapper {
+        flex: 1;
+        max-width: 480px;
+        position: relative;
+      }
+      .search-input {
+        width: 100%;
+        height: 38px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-full);
+        padding: 0 16px 0 38px;
+        font-size: 13px;
+        color: var(--text-main);
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .search-input:focus {
+        border-color: var(--border-focus);
+        background: var(--bg-card-hover);
+        box-shadow: 0 0 0 3px var(--accent-primary-dim);
+      }
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: var(--text-dim);
+        pointer-events: none;
+      }
 
-    /* 6. MiniPlayerBar (하단 플로팅 플레이어 바 - 100% 동일 규격) */
-    .mini-player {
-      padding: 14px 18px;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .mini-player-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .cover-art-box {
-      width: 54px;
-      height: 54px;
-      border-radius: 12px;
-      background: var(--bg-surface-3);
-      border: 1px solid var(--glass-border-bright);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--accent-cyan);
-      font-size: 26px;
-      flex-shrink: 0;
-    }
-    .mini-track-info { flex: 1; min-width: 0; }
-    .mini-title { font-size: 15px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .mini-artist { font-size: 13px; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-    .mini-ctrl-btns { display: flex; align-items: center; gap: 4px; }
-    .btn-icon-sq {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-icon-sq:hover { background: rgba(255, 255, 255, 0.08); transform: scale(1.08); color: var(--accent-cyan); }
-    
-    .btn-play-neon {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: var(--accent-gradient);
-      border: none;
-      color: #030712;
-      font-size: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
-      transition: all 0.2s;
-    }
-    .btn-play-neon:hover { transform: scale(1.1); box-shadow: 0 0 26px rgba(0, 240, 255, 0.8); }
+      .btn {
+        height: 38px;
+        padding: 0 16px;
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+      }
+      .btn-primary {
+        background: var(--accent-primary);
+        color: #041021;
+      }
+      .btn-primary:hover {
+        background: var(--accent-primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+      }
+      .btn-secondary {
+        background: var(--bg-card);
+        border-color: var(--border-subtle);
+        color: var(--text-main);
+      }
+      .btn-secondary:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--text-dim);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-muted);
+        padding: 0 10px;
+      }
+      .btn-ghost:hover {
+        color: var(--text-main);
+        background: var(--bg-card);
+      }
+      .btn-danger-ghost {
+        background: transparent;
+        color: var(--accent-rose);
+      }
+      .btn-danger-ghost:hover {
+        background: rgba(251, 113, 133, 0.12);
+      }
 
-    .timeline-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .timeline-track {
-      flex: 1;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      position: relative;
-      cursor: pointer;
-    }
-    .timeline-fill {
-      width: 35%;
-      height: 100%;
-      background: var(--accent-cyan);
-      border-radius: 4px;
-      position: relative;
-      box-shadow: 0 0 8px var(--accent-cyan);
-    }
-    .timeline-thumb {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--text-primary);
-      border: 2px solid var(--accent-cyan);
-      position: absolute;
-      right: -6px;
-      top: -4px;
-      box-shadow: 0 0 8px var(--accent-cyan);
-    }
-  </style>
-</head>
-<body>
+      /* ==========================================================================
+       3. 메인 콘텐츠 레이아웃 (재생목록 중심 메인 뷰)
+       ========================================================================== */
+      .app-main {
+        flex: 1;
+        min-height: 0;
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 16px 24px calc(var(--player-bar-height) + 20px) 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: hidden;
+      }
 
-  <!-- Ambient Glow Orbs -->
-  <div class="ambient-orb-1"></div>
-  <div class="ambient-orb-2"></div>
+      /* 상단 요약 & 누적 통계 바 */
+      .summary-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        box-shadow: var(--shadow-sm);
+        flex-shrink: 0;
+      }
+      .summary-stats {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .stat-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .stat-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .stat-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-main);
+        font-family: "JetBrains Mono", monospace;
+      }
+      .stat-badge-save {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: var(--radius-full);
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--accent-emerald);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+      }
+      .stat-pulse {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-emerald);
+        box-shadow: 0 0 8px var(--accent-emerald);
+        animation: pulseGlow 2s infinite ease-in-out;
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.4);
+          opacity: 0.5;
+        }
+      }
 
-  <!-- Top Prototype Control Bar -->
-  <div class="proto-controls">
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <span class="proto-badge">PAGE-PLAY-01</span>
-      <span style="font-size: 12px; color: var(--text-muted);">Now Playing 프로토타입</span>
-    </div>
+      /* 아카이브 필터 칩 목록 */
+      .archive-chips-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        flex-shrink: 0;
+        scrollbar-width: thin;
+      }
+      .archive-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 6px 14px;
+        border-radius: var(--radius-full);
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        user-select: none;
+      }
+      .archive-chip:hover {
+        background: var(--bg-card-hover);
+        color: var(--text-main);
+        border-color: var(--text-dim);
+      }
+      .archive-chip.active {
+        background: var(--accent-primary-dim);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+        font-weight: 600;
+      }
+      .archive-chip .chip-count {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: var(--radius-full);
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .archive-chip .chip-del {
+        font-size: 13px;
+        color: var(--text-dim);
+        margin-left: 2px;
+        line-height: 1;
+      }
+      .archive-chip .chip-del:hover {
+        color: var(--accent-rose);
+      }
 
-    <div class="proto-btn-group">
-      <button id="layoutToggleBtn" class="proto-btn" onclick="toggleLayout()">📱 모바일 뷰 (480px)</button>
-      <button class="proto-btn" onclick="toggleTheme()">🎨 <span id="themeLabel">다크 테마</span></button>
-      <a href="../05-디자인가이드.html" class="proto-btn">🎨 디자인가이드</a>
-    </div>
-  </div>
+      /* 드래그앤드롭 퀵 인포 존 */
+      .drop-hint-bar {
+        border: 2px dashed var(--border-subtle);
+        background: var(--bg-card);
+        border-radius: var(--radius-md);
+        padding: 10px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: var(--text-muted);
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+      }
+      .drop-hint-bar.dragover {
+        border-color: var(--accent-primary);
+        background: var(--accent-primary-dim);
+        color: var(--accent-primary);
+      }
+      .drop-hint-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .btn-xs {
+        height: 28px;
+        padding: 0 10px;
+        font-size: 11px;
+        border-radius: var(--radius-sm);
+      }
 
-  <!-- App Shell Container -->
-  <div id="appShell" class="app-shell">
+      /* ==========================================================================
+       4. 재생목록 테이블 / 트랙 리스트
+       ========================================================================== */
+      .playlist-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .playlist-table-header {
+        display: grid;
+        grid-template-columns:
+          50px minmax(200px, 2.5fr) minmax(140px, 1.5fr)
+          100px 70px 90px;
+        padding: 12px 18px;
+        background: var(--bg-sidebar);
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+        user-select: none;
+      }
 
-    <!-- 1. Global Header Bar -->
-    <div class="glass-box header-bar">
-      <div class="header-left">
-        <div class="header-logo-icon">⚡</div>
-        <div class="header-title-wrap">
-          <div class="header-title-row">
-            <span class="header-title">h2y Music Player</span>
-            <span class="version-tag">v0.0.1</span>
-          </div>
-          <span class="header-sub">ZIP 무해제 온디맨드 스트리밍 플레이어</span>
+      .track-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-focus) transparent;
+      }
+      .track-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .track-list::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+      }
+      .track-list::-webkit-scrollbar-thumb {
+        background: var(--border-subtle);
+        border-radius: var(--radius-full);
+      }
+      .track-list::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-primary);
+      }
+      .track-row {
+        display: grid;
+        grid-template-columns:
+          50px minmax(200px, 2.5fr) minmax(140px, 1.5fr)
+          100px 70px 90px;
+        align-items: center;
+        padding: 10px 18px;
+        border-bottom: 1px solid var(--border-subtle);
+        font-size: 13px;
+        transition: all 0.12s ease;
+        cursor: pointer;
+        user-select: none;
+      }
+      .track-row:last-child {
+        border-bottom: none;
+      }
+      .track-row:hover {
+        background: var(--bg-card-hover);
+      }
+      .track-row.playing {
+        background: var(--accent-primary-dim);
+        border-color: rgba(56, 189, 248, 0.2);
+      }
+      .track-row.playing .track-title {
+        color: var(--accent-primary);
+        font-weight: 700;
+      }
+
+      /* 컬럼별 스타일 */
+      .col-idx {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: var(--text-dim);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+      }
+      .track-row:hover .col-idx .idx-number {
+        display: none;
+      }
+      .track-row:hover .col-idx .hover-play-icon {
+        display: block;
+        color: var(--text-main);
+      }
+      .hover-play-icon {
+        display: none;
+      }
+      .track-row.playing .col-idx .idx-number {
+        display: none;
+      }
+      .track-row.playing .col-idx .playing-bars {
+        display: flex;
+      }
+
+      /* 3-바 미니멀 이퀄라이저 애니메이션 */
+      .playing-bars {
+        display: none;
+        align-items: flex-end;
+        gap: 2px;
+        height: 14px;
+      }
+      .playing-bar {
+        width: 3px;
+        background: var(--accent-primary);
+        border-radius: 1px;
+        animation: bounceBar 1s ease-in-out infinite alternate;
+      }
+      .playing-bar:nth-child(1) {
+        height: 8px;
+        animation-duration: 0.6s;
+      }
+      .playing-bar:nth-child(2) {
+        height: 14px;
+        animation-duration: 0.8s;
+      }
+      .playing-bar:nth-child(3) {
+        height: 10px;
+        animation-duration: 0.5s;
+      }
+      @keyframes bounceBar {
+        0% {
+          height: 3px;
+        }
+        100% {
+          height: 14px;
+        }
+      }
+
+      .col-title {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding-right: 12px;
+        overflow: hidden;
+      }
+      .track-title {
+        font-weight: 600;
+        color: var(--text-main);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .track-artist {
+        font-size: 11px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .col-archive {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        overflow: hidden;
+      }
+      .archive-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-family: "JetBrains Mono", monospace;
+        padding: 3px 8px;
+        border-radius: var(--radius-sm);
+        background: rgba(129, 140, 248, 0.12);
+        color: var(--accent-secondary);
+        border: 1px solid rgba(129, 140, 248, 0.25);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+      }
+
+      .col-format {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--text-dim);
+      }
+      .col-duration {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .col-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+        opacity: 0.6;
+        transition: opacity 0.15s ease;
+      }
+      .track-row:hover .col-actions {
+        opacity: 1;
+      }
+      .btn-icon {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm);
+        border: none;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.1s ease;
+      }
+      .btn-icon:hover {
+        background: var(--bg-card-active);
+        color: var(--text-main);
+      }
+      .btn-icon.delete:hover {
+        background: rgba(251, 113, 133, 0.15);
+        color: var(--accent-rose);
+      }
+
+      /* 빈 상태 안내 (Empty State) */
+      .empty-state {
+        flex: 1;
+        height: 100%;
+        min-height: 360px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 24px;
+        text-align: center;
+        gap: 16px;
+        margin: auto;
+      }
+      .empty-icon-wrap {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--accent-primary-dim);
+        border: 1px solid rgba(2, 132, 199, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: var(--accent-primary);
+        margin-bottom: 2px;
+      }
+      .empty-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.3px;
+      }
+      .empty-desc {
+        font-size: 13px;
+        color: var(--text-muted);
+        max-width: 320px;
+        line-height: 1.5;
+      }
+      .empty-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* ==========================================================================
+         5. 하단 플로팅 글래스 플레이어 바 (Flutter MiniPlayerBar 디자인 100% 동기화)
+         ========================================================================== */
+      .player-floating-wrap {
+        position: fixed;
+        bottom: 14px;
+        left: 24px;
+        right: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+        z-index: 100;
+      }
+      .player-glass-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border-subtle);
+        border-radius: 20px;
+        padding: 12px 18px 10px 18px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        transition: all 0.2s ease;
+      }
+      .player-top-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .player-cover-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        color: var(--accent-primary);
+        flex-shrink: 0;
+      }
+      .player-meta-info {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .player-track-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-main);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .player-track-artist {
+        font-size: 12px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .player-main-ctrls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-ctrl-lg {
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        font-size: 20px;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .btn-ctrl-lg:hover {
+        background: var(--bg-card-hover);
+        color: var(--accent-primary);
+      }
+      .btn-hero-play {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: var(--accent-gradient);
+        color: #ffffff;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 0 18px rgba(2, 132, 199, 0.4), 0 3px 10px rgba(99, 102, 241, 0.25);
+        transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      [data-theme="dark"] .btn-hero-play {
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.5), 0 3px 12px rgba(168, 85, 247, 0.4);
+        color: #030712;
+      }
+      .btn-hero-play:hover {
+        transform: scale(1.08);
+        box-shadow: 0 0 24px rgba(2, 132, 199, 0.6), 0 5px 16px rgba(99, 102, 241, 0.4);
+      }
+      .player-tools-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-tool-icon {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 15px;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .btn-tool-icon:hover {
+        background: var(--bg-card-hover);
+        color: var(--text-main);
+      }
+      .volume-slider-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: 4px;
+      }
+      .vol-slider {
+        width: 72px;
+        height: 4px;
+        accent-color: var(--accent-primary);
+        cursor: pointer;
+      }
+
+      /* 2행 타임라인 */
+      .player-bottom-timeline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .timeline-time {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--text-muted);
+        min-width: 36px;
+      }
+      .timeline-bar-track {
+        flex: 1;
+        height: 4px;
+        border-radius: var(--radius-full);
+        background: var(--bg-card-active);
+        position: relative;
+        cursor: pointer;
+        transition: height 0.1s ease;
+      }
+      .timeline-bar-track:hover {
+        height: 6px;
+      }
+      .timeline-bar-fill {
+        height: 100%;
+        background: var(--accent-gradient);
+        border-radius: var(--radius-full);
+        position: relative;
+      }
+      .timeline-bar-fill::after {
+        content: "";
+        position: absolute;
+        right: -4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ffffff;
+        opacity: 0;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+        transition: opacity 0.15s ease;
+      }
+      .timeline-bar-track:hover .timeline-bar-fill::after {
+        opacity: 1;
+      }
+
+      /* ==========================================================================
+       6. 모달 & 서브 뷰 (가사 뷰어, EQ, 압축파일 추가 팝업)
+       ========================================================================== */
+      .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(8px);
+        z-index: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .modal-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .modal-window {
+        background: var(--bg-sidebar);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        width: 100%;
+        max-width: 520px;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        transform: translateY(10px);
+        transition: transform 0.2s ease;
+      }
+      .modal-backdrop.open .modal-window {
+        transform: translateY(0);
+      }
+      .modal-head {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-subtle);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .modal-title {
+        font-size: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .modal-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* 알림 토스트 (Toast) */
+      .toast {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-focus);
+        color: var(--text-main);
+        padding: 12px 18px;
+        border-radius: var(--radius-md);
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: var(--shadow-lg);
+        z-index: 300;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transform: translateY(-20px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s ease;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* 반응형 레이아웃 */
+      @media (max-width: 768px) {
+        .playlist-table-header {
+          grid-template-columns: 36px 1fr 60px 40px;
+        }
+        .col-archive,
+        .col-format {
+          display: none;
+        }
+        .track-row {
+          grid-template-columns: 36px 1fr 60px 40px;
+        }
+        .player-floating-wrap {
+          left: 12px;
+          right: 12px;
+          bottom: 10px;
+        }
+        .player-tools-group {
+          display: none;
+        }
+        .app-main {
+          padding: 12px 14px calc(var(--player-bar-height) + 14px) 14px;
+          gap: 10px;
+        }
+        .summary-card {
+          padding: 10px 14px;
+        }
+        .summary-stats {
+          gap: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 1. 글로벌 헤더 -->
+    <header class="app-header">
+      <div class="brand-group">
+        <div class="brand-logo">h2y</div>
+        <div class="brand-text">
+          <h1>h2y Music</h1>
         </div>
       </div>
-      <div class="vfs-status-chip">
-        <div class="vfs-dot"></div>
-        <span>VFS Ready</span>
-      </div>
-    </div>
 
-    <!-- 2. DropZone Bar (슬림화 규격) -->
-    <div class="glass-box dropzone-bar" onclick="alert('file_picker: 압축 파일(ZIP) 열기 다이얼로그 호출')">
-      <div class="zip-icon-box">📁</div>
-      <div class="zip-info">
-        <div class="zip-name">Album_FLAC_Archive_2026.zip</div>
-        <div class="zip-desc">트랙 24개 (18ms) • 변경하려면 터치</div>
+      <!-- 실시간 검색 입력 -->
+      <div class="search-box-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="음악 검색..."
+        />
       </div>
-      <div class="zip-action-badge">
-        <span>⇆</span>
-        <span>변경</span>
+
+      <!-- 헤더 우측 액션 -->
+      <div class="header-actions">
+        <button class="btn btn-primary" id="btnOpenAddModal">
+          <span>➕</span>
+          <span>압축파일 추가</span>
+        </button>
+        <button
+          class="btn btn-secondary"
+          id="btnThemeToggle"
+          title="다크/라이트 모드 전환"
+        >
+          <span id="themeIcon">☀️</span>
+        </button>
       </div>
-    </div>
+    </header>
 
-    <!-- 3. Mobile Navigation Tab Bar -->
-    <div class="mobile-tab-row">
-      <a href="PAGE-PLAY-01.html" class="nav-tab-btn active">
-        <span>💿</span>
-        <span>Now Playing</span>
-      </a>
-      <a href="PAGE-TRACK-01.html" class="nav-tab-btn">
-        <span>📜</span>
-        <span>Track List (24)</span>
-      </a>
-      <a href="PAGE-LYRICS-01.html" class="nav-tab-btn">
-        <span>🎤</span>
-        <span>Lyrics</span>
-      </a>
-      <a href="PAGE-EQ-01.html" class="nav-tab-btn">
-        <span>🎚️</span>
-        <span>EQ</span>
-      </a>
-    </div>
-
-    <!-- 4. Single Column Center Body (Mobile View) -->
-    <div class="mobile-single-view">
-      <div class="glass-box vinyl-card">
-        <!-- Rotating Vinyl LP Turntable -->
-        <div class="vinyl-disk-wrapper" onclick="togglePlay()">
-          <div id="vinylDisk" class="vinyl-disk">
-            <div class="vinyl-center-label">🎵</div>
+    <!-- 2. 메인 콘텐츠 (재생목록 중심) -->
+    <main class="app-main">
+      <!-- 상단 재생목록 요약 & 관리 툴바 -->
+      <section class="summary-card" id="summaryCard">
+        <div class="summary-stats">
+          <div class="stat-item">
+            <span class="stat-label">재생목록</span>
+            <span class="stat-value" id="statTrackCount">0곡</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">총 시간</span>
+            <span class="stat-value" id="statTotalDuration">00:00</span>
           </div>
         </div>
 
-        <!-- Track Metadata -->
-        <div id="trackTitle" class="track-meta-title">Track 01. Cyber City Night.flac</div>
-        <div id="trackPath" class="track-meta-path">/Music/FLAC/Track 01. Cyber City Night.flac</div>
+        <button
+          class="btn btn-danger-ghost btn-xs"
+          id="btnClearAll"
+          title="재생목록 초기화"
+        >
+          <span>🗑️ 전체 비우기</span>
+        </button>
+      </section>
 
-        <!-- Badges -->
-        <div class="badge-row">
-          <span class="meta-badge badge-cyan">FLAC</span>
-          <span class="meta-badge badge-purple">Offset 0x004A20</span>
-          <span class="meta-badge badge-emerald">42.8 MB</span>
+      <!-- 재생목록 테이블 카드 -->
+      <section class="playlist-card">
+        <!-- 테이블 헤더 -->
+        <div class="playlist-table-header" id="playlistTableHeader">
+          <div style="text-align: center">#</div>
+          <div>곡명 & 아티스트</div>
+          <div class="col-archive">출처</div>
+          <div class="col-format">포맷</div>
+          <div>시간</div>
+          <div style="text-align: right">관리</div>
         </div>
 
-        <!-- Spectrum Visualizer (24 Bars) -->
-        <div class="glass-box spectrum-box" id="spectrumBox">
-          <!-- JS generated 24 bars -->
-        </div>
-      </div>
-    </div>
+        <!-- 트랙 목록 리스트 -->
+        <ul class="track-list" id="trackListUl">
+          <!-- JS로 동적 렌더링 -->
+        </ul>
 
-    <!-- 5. Wide Two-Column View (Tablet/Desktop View) -->
-    <div class="wide-split-wrapper">
-      <div class="wide-sidebar">
-        <!-- Mini Track List Preview in Wide mode -->
-        <div class="glass-box" style="padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 8px;">
-          <div style="font-size: 13px; font-weight: 700; color: var(--accent-cyan); display: flex; justify-content: space-between;">
-            <span>트랙 목록 (24)</span>
-            <a href="PAGE-TRACK-01.html" style="font-size: 11px; color: var(--text-muted); text-decoration: none;">전체보기 ↗</a>
+        <!-- 빈 상태 메시지 (트랙이 없을 때) -->
+        <div class="empty-state" id="emptyState" style="display: none">
+          <div class="empty-icon-wrap">🎵</div>
+          <div class="empty-title">재생목록이 비어 있습니다</div>
+          <div class="empty-desc">
+            음악 압축파일(ZIP)을 추가하여 바로 감상해 보세요.
           </div>
-          <div style="font-size: 12px; padding: 8px; border-radius: 8px; background: var(--accent-cyan-dim); color: var(--accent-cyan); font-weight: 600;">
-            ▶ 01. Track 01. Cyber City Night.flac
-          </div>
-          <div style="font-size: 12px; padding: 8px; border-radius: 8px; background: var(--glass-card); color: var(--text-primary);">
-            02. Track 02. Neon Highway.mp3
-          </div>
-          <div style="font-size: 12px; padding: 8px; border-radius: 8px; background: var(--glass-card); color: var(--text-primary);">
-            03. Track 03. Midnight Rain.flac
+          <div class="empty-actions">
+            <button class="btn btn-primary" id="btnEmptyAdd">
+              <span>➕</span>
+              <span>압축파일 추가</span>
+            </button>
           </div>
         </div>
-      </div>
+      </section>
+    </main>
 
-      <div class="wide-main">
-        <div class="glass-box vinyl-card">
-          <div class="vinyl-disk-wrapper" onclick="togglePlay()">
-            <div id="vinylDiskWide" class="vinyl-disk">
-              <div class="vinyl-center-label">🎵</div>
+    <!-- 3. 하단 플로팅 글래스 플레이어 바 (Flutter MiniPlayerBar 스타일) -->
+    <footer class="player-floating-wrap">
+      <div class="player-glass-card">
+        <!-- 1행: 트랙 정보 & 대형 재생 제어 버튼 & 도구 -->
+        <div class="player-top-row">
+          <!-- 앨범 커버 (48x48) -->
+          <div class="player-cover-box" id="playerCoverEmoji">🎵</div>
+
+          <!-- 트랙명 & 아티스트 -->
+          <div class="player-meta-info">
+            <div class="player-track-title" id="playerTitle">
+              재생 중인 곡이 없습니다
+            </div>
+            <div class="player-track-artist" id="playerArtist">
+              트랙을 선택하세요
             </div>
           </div>
-          <div class="track-meta-title">Track 01. Cyber City Night.flac</div>
-          <div class="track-meta-path">/Music/FLAC/Track 01. Cyber City Night.flac</div>
-          <div class="badge-row">
-            <span class="meta-badge badge-cyan">FLAC</span>
-            <span class="meta-badge badge-purple">Offset 0x004A20</span>
-            <span class="meta-badge badge-emerald">42.8 MB</span>
+
+          <!-- 이전/재생/다음 컨트롤 버튼 -->
+          <div class="player-main-ctrls">
+            <button class="btn-ctrl-lg" id="btnPrev" title="이전 곡">⏮</button>
+            <button class="btn-hero-play" id="btnPlayPause" title="재생 / 일시정지">▶</button>
+            <button class="btn-ctrl-lg" id="btnNext" title="다음 곡">⏭</button>
+          </div>
+
+          <!-- 우측: 도구 (가사, EQ, 볼륨) -->
+          <div class="player-tools-group">
+            <button class="btn-tool-icon" id="btnOpenLyrics" title="가사">💬</button>
+            <button class="btn-tool-icon" id="btnOpenEQ" title="이퀄라이저">🎚️</button>
+            <div class="volume-slider-group">
+              <span style="font-size: 14px; color: var(--text-muted)">🔊</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value="80"
+                class="vol-slider"
+                id="volumeSlider"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- 2행: 타임라인 슬라이더 & 시간 레이블 -->
+        <div class="player-bottom-timeline">
+          <span class="timeline-time" id="timeCurrent">00:00</span>
+          <div class="timeline-bar-track" id="progressSlider">
+            <div
+              class="timeline-bar-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+          <span class="timeline-time" id="timeTotal">00:00</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- 숨김 파일 입력창 -->
+    <input
+      type="file"
+      id="realFileInput"
+      accept=".zip,.7z,.rar,.tar"
+      style="display: none"
+      multiple
+    />
+
+    <!-- 5. 가사 모달 (Lyrics Viewer) -->
+    <div class="modal-backdrop" id="lyricsModal">
+      <div class="modal-window" style="max-width: 460px">
+        <div class="modal-head">
+          <div class="modal-title">💬 가사</div>
+          <button class="btn-icon" id="btnCloseLyricsModal">✕</button>
+        </div>
+        <div
+          class="modal-body"
+          style="text-align: center; max-height: 380px; overflow-y: auto"
+        >
+          <div
+            style="font-size: 12px; color: var(--text-dim); margin-bottom: 12px"
+            id="lyricsSongInfo"
+          >
+            Cyberpunk City - Track 01
+          </div>
+          <div
+            id="lyricsContent"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 14px;
+              font-size: 14px;
+              color: var(--text-muted);
+            "
+          >
+            <p>[00:05.12] 네온 사인이 쏟아지는 밤거리</p>
+            <p
+              class="active"
+              style="
+                color: var(--accent-primary);
+                font-weight: 700;
+                font-size: 16px;
+              "
+            >
+              [00:14.50] 압축 풀림 없이 심장 속으로 흐르는 비트
+            </p>
+            <p>[00:22.80] 온디맨드 스트리밍, 딜레이는 없어</p>
+            <p>[00:31.10] 24비트 고음질로 채우는 공간</p>
+            <p>[00:45.00] 영속 저장된 우리의 플레이리스트</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 6. MiniPlayerBar (하단 플로팅 플레이어 바) -->
-    <div class="glass-box mini-player">
-      <div class="mini-player-top">
-        <div class="cover-art-box">🎵</div>
-        <div class="mini-track-info">
-          <div id="miniTitle" class="mini-title">Track 01. Cyber City Night</div>
-          <div id="miniArtist" class="mini-artist">Neon Horizon • Future Sound</div>
+    <!-- 6. 10밴드 EQ 모달 -->
+    <div class="modal-backdrop" id="eqModal">
+      <div class="modal-window" style="max-width: 580px">
+        <div class="modal-head">
+          <div class="modal-title">🎚️ 이퀄라이저</div>
+          <button class="btn-icon" id="btnCloseEqModal">✕</button>
         </div>
-        <div class="mini-ctrl-btns">
-          <button class="btn-icon-sq" title="이전 곡" onclick="prevTrack()">⏮</button>
-          <button id="mainPlayBtn" class="btn-play-neon" onclick="togglePlay()">⏸</button>
-          <button class="btn-icon-sq" title="다음 곡" onclick="nextTrack()">⏭</button>
-        </div>
-      </div>
-
-      <div class="timeline-row">
-        <span id="posTime">01:24</span>
-        <div class="timeline-track" onclick="seekTimeline(event)">
-          <div id="timelineFill" class="timeline-fill">
-            <div class="timeline-thumb"></div>
+        <div class="modal-body">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+              height: 160px;
+              padding: 10px 0;
+            "
+          >
+            <!-- 10개 주파수 밴드 슬라이더 시뮬레이션 -->
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="3"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">31Hz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="5"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">62Hz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="2"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">125Hz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="0"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">250Hz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="-1"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">500Hz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="1"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">1kHz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="3"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">2kHz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="4"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">4kHz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="5"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">8kHz</span>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 6px;
+              "
+            >
+              <input
+                type="range"
+                min="-12"
+                max="12"
+                value="4"
+                orient="vertical"
+                style="writing-mode: vertical-lr; direction: rtl; height: 120px"
+              />
+              <span style="font-size: 10px; color: var(--text-dim)">16kHz</span>
+            </div>
           </div>
         </div>
-        <span>04:15</span>
       </div>
     </div>
 
-  </div>
+    <!-- 알림 토스트 -->
+    <div class="toast" id="toastMsg">
+      <span id="toastIcon">✨</span>
+      <span id="toastText">재생목록이 저장되었습니다.</span>
+    </div>
 
-  <script>
-    // Play/Pause Toggle State
-    let isPlaying = true;
-    function togglePlay() {
-      isPlaying = !isPlaying;
-      const disk1 = document.getElementById('vinylDisk');
-      const disk2 = document.getElementById('vinylDiskWide');
-      const btn = document.getElementById('mainPlayBtn');
-      if (isPlaying) {
-        disk1.classList.remove('paused');
-        if (disk2) disk2.classList.remove('paused');
-        btn.innerText = '⏸';
-      } else {
-        disk1.classList.add('paused');
-        if (disk2) disk2.classList.add('paused');
-        btn.innerText = '▶';
+    <!-- ==========================================================================
+       7. 인터랙티브 비즈니스 로직 & 로컬 스토리지 영속화 엔진
+       ========================================================================== -->
+    <script>
+      // 상태 정의
+      const STORAGE_KEY = "h2y_modern_playlist_v2";
+
+      // 초기 기본 데이터 (빈 목록으로 시작)
+      const DEFAULT_TRACKS = [];
+
+      let state = {
+        tracks: [],
+        currentTrackId: null,
+        isPlaying: false,
+        currentTimeSec: 42,
+        activeArchiveFilter: "ALL",
+        searchQuery: "",
+        isShuffle: false,
+        repeatMode: "all", // off, all, one
+        volume: 80,
+        theme: "light",
+      };
+
+      // 로컬 스토리지 저장 및 복원
+      function loadStateFromStorage() {
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            state.tracks =
+              Array.isArray(parsed.tracks) && parsed.tracks.length > 0
+                ? parsed.tracks
+                : [...DEFAULT_TRACKS];
+            state.currentTrackId =
+              parsed.currentTrackId ||
+              (state.tracks[0] ? state.tracks[0].id : null);
+            state.theme = parsed.theme || "light";
+          } else {
+            state.tracks = [...DEFAULT_TRACKS];
+            state.currentTrackId = state.tracks[0].id;
+            state.theme = "light";
+          }
+        } catch (e) {
+          state.tracks = [...DEFAULT_TRACKS];
+          state.currentTrackId = state.tracks[0].id;
+          state.theme = "light";
+        }
+        applyTheme(state.theme);
       }
-    }
 
-    // Generate 24 Spectrum Bars
-    const specBox = document.getElementById('spectrumBox');
-    for (let i = 0; i < 24; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'spec-bar';
-      bar.style.height = `${Math.floor(Math.random() * 26) + 8}px`;
-      specBox.appendChild(bar);
-    }
-
-    // Spectrum Animation loop
-    let tick = 0;
-    setInterval(() => {
-      if (!isPlaying) return;
-      tick += 0.2;
-      const bars = specBox.children;
-      for (let i = 0; i < bars.length; i++) {
-        const h = Math.max(6, Math.min(36, Math.sin(i * 0.5 + tick) * 14 + 18));
-        bars[i].style.height = `${h}px`;
+      function saveStateToStorage() {
+        try {
+          const toSave = {
+            tracks: state.tracks,
+            currentTrackId: state.currentTrackId,
+            theme: state.theme,
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+        } catch (e) {
+          console.error("Storage save error:", e);
+        }
       }
-    }, 100);
 
-    // Responsive Wide / Mobile Layout Switcher
-    let isWide = false;
-    function toggleLayout() {
-      isWide = !isWide;
-      const shell = document.getElementById('appShell');
-      const btn = document.getElementById('layoutToggleBtn');
-      if (isWide) {
-        shell.classList.add('wide-mode');
-        btn.innerText = '💻 데스크톱 뷰 (860px)';
-        btn.classList.add('active');
-      } else {
-        shell.classList.remove('wide-mode');
-        btn.innerText = '📱 모바일 뷰 (480px)';
-        btn.classList.remove('active');
+      // 알림 토스트 표시
+      function showToast(text, icon = "✨") {
+        const toast = document.getElementById("toastMsg");
+        document.getElementById("toastText").textContent = text;
+        document.getElementById("toastIcon").textContent = icon;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2500);
       }
-    }
 
-    // Dark / Light Theme Switcher
-    let isDark = true;
-    function toggleTheme() {
-      isDark = !isDark;
-      const theme = isDark ? 'cyber' : 'light';
-      document.documentElement.setAttribute('data-theme', theme);
-      document.getElementById('themeLabel').innerText = isDark ? '다크 테마' : '라이트 테마';
-    }
+      // 테마 적용
+      function applyTheme(theme) {
+        state.theme = theme;
+        document.documentElement.setAttribute("data-theme", theme);
+        document.getElementById("themeIcon").textContent =
+          theme === "dark" ? "🌙" : "☀️";
+        saveStateToStorage();
+      }
 
-    function seekTimeline(e) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      document.getElementById('timelineFill').style.width = `${pct * 100}%`;
-    }
+      // 트랙 누적(Append) 추가
+      function appendTracksFromArchive(archiveName, newTrackList) {
+        const formatted = newTrackList.map((t, idx) => ({
+          id:
+            "trk_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
+          title: t.title || "Track " + (idx + 1),
+          artist: t.artist || "Unknown Artist",
+          archiveName: archiveName,
+          format: t.format || "FLAC 24b",
+          durationSec: t.durationSec || 200,
+          durationStr: t.durationStr || "03:20",
+        }));
 
-    const sampleTracks = [
-      { title: "Track 01. Cyber City Night.flac", artist: "Neon Horizon • Future Sound", offset: "0x004A20", size: "42.8 MB" },
-      { title: "Track 02. Neon Highway.mp3", artist: "Synthwave Collective • Retro", offset: "0x02CD50", size: "11.2 MB" },
-      { title: "Track 03. Midnight Rain.flac", artist: "Acoustic Cafe • Vol.2", offset: "0x04F180", size: "38.5 MB" }
-    ];
-    let currIdx = 0;
-    function nextTrack() {
-      currIdx = (currIdx + 1) % sampleTracks.length;
-      updateTrack();
-    }
-    function prevTrack() {
-      currIdx = (currIdx - 1 + sampleTracks.length) % sampleTracks.length;
-      updateTrack();
-    }
-    function updateTrack() {
-      const t = sampleTracks[currIdx];
-      document.getElementById('trackTitle').innerText = t.title;
-      document.getElementById('trackPath').innerText = `/Music/FLAC/${t.title}`;
-      document.getElementById('miniTitle').innerText = t.title.replace(/\.[^.]+$/, '');
-      document.getElementById('miniArtist').innerText = t.artist;
-      document.getElementById('timelineFill').style.width = '0%';
-    }
-  </script>
-</body>
+        state.tracks = [...state.tracks, ...formatted];
+        if (!state.currentTrackId && state.tracks.length > 0) {
+          state.currentTrackId = state.tracks[0].id;
+        }
+        saveStateToStorage();
+        renderAll();
+        showToast(
+          `📦 '${archiveName}'에서 ${formatted.length}곡이 누적 추가되었습니다!`,
+          "➕",
+        );
+      }
+
+      // 트랙 삭제
+      function deleteTrack(id, e) {
+        if (e) e.stopPropagation();
+        state.tracks = state.tracks.filter((t) => t.id !== id);
+        if (state.currentTrackId === id) {
+          state.currentTrackId = state.tracks[0] ? state.tracks[0].id : null;
+          state.isPlaying = false;
+        }
+        saveStateToStorage();
+        renderAll();
+        showToast("곡이 재생목록에서 제거되었습니다.", "🗑️");
+      }
+
+      // 특정 아카이브 전체 삭제
+      function deleteArchive(archiveName, e) {
+        if (e) e.stopPropagation();
+        state.tracks = state.tracks.filter(
+          (t) => t.archiveName !== archiveName,
+        );
+        if (state.activeArchiveFilter === archiveName) {
+          state.activeArchiveFilter = "ALL";
+        }
+        if (!state.tracks.some((t) => t.id === state.currentTrackId)) {
+          state.currentTrackId = state.tracks[0] ? state.tracks[0].id : null;
+          state.isPlaying = false;
+        }
+        saveStateToStorage();
+        renderAll();
+        showToast(`📦 '${archiveName}'의 모든 곡이 제거되었습니다.`, "🗑️");
+      }
+
+      // 재생목록 전체 비우기
+      function clearAllTracks() {
+        if (confirm("재생목록의 모든 곡을 비우시겠습니까?")) {
+          state.tracks = [];
+          state.currentTrackId = null;
+          state.isPlaying = false;
+          state.activeArchiveFilter = "ALL";
+          saveStateToStorage();
+          renderAll();
+          showToast("재생목록이 완전히 비워졌습니다.", "🗑️");
+        }
+      }
+
+      // 트랙 선택 및 재생 토글
+      function selectAndPlayTrack(id) {
+        if (state.currentTrackId === id) {
+          state.isPlaying = !state.isPlaying;
+        } else {
+          state.currentTrackId = id;
+          state.isPlaying = true;
+          state.currentTimeSec = 0;
+        }
+        saveStateToStorage();
+        renderAll();
+      }
+
+      // 렌더링: 필터 칩 목록 (컨테이너가 존재할 때만 렌더링)
+      function renderArchiveChips() {
+        const container = document.getElementById("archiveChipsContainer");
+        if (!container) return;
+        const archives = {};
+        state.tracks.forEach((t) => {
+          archives[t.archiveName] = (archives[t.archiveName] || 0) + 1;
+        });
+
+        const archiveNames = Object.keys(archives);
+        if (archiveNames.length === 0) {
+          container.innerHTML = "";
+          return;
+        }
+
+        let html = `
+        <div class="archive-chip ${state.activeArchiveFilter === "ALL" ? "active" : ""}" onclick="setArchiveFilter('ALL')">
+          <span>전체 아카이브</span>
+          <span class="chip-count">${state.tracks.length}</span>
+        </div>
+      `;
+
+        archiveNames.forEach((name) => {
+          const isActive = state.activeArchiveFilter === name;
+          html += `
+          <div class="archive-chip ${isActive ? "active" : ""}" onclick="setArchiveFilter('${name}')">
+            <span>📦 ${name}</span>
+            <span class="chip-count">${archives[name]}</span>
+            <span class="chip-del" onclick="deleteArchive('${name}', event)" title="이 아카이브 삭제">✕</span>
+          </div>
+        `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      function setArchiveFilter(filter) {
+        state.activeArchiveFilter = filter;
+        renderAll();
+      }
+
+      // 렌더링: 트랙 리스트 및 통계
+      function renderTrackList() {
+        const ul = document.getElementById("trackListUl");
+        const empty = document.getElementById("emptyState");
+        const tableHeader = document.getElementById("playlistTableHeader");
+        const summaryCard = document.getElementById("summaryCard");
+
+        // 필터링 적용
+        let list = state.tracks;
+        if (state.activeArchiveFilter !== "ALL") {
+          list = list.filter(
+            (t) => t.archiveName === state.activeArchiveFilter,
+          );
+        }
+        if (state.searchQuery.trim()) {
+          const q = state.searchQuery.toLowerCase();
+          list = list.filter(
+            (t) =>
+              t.title.toLowerCase().includes(q) ||
+              t.artist.toLowerCase().includes(q) ||
+              t.archiveName.toLowerCase().includes(q) ||
+              t.format.toLowerCase().includes(q),
+          );
+        }
+
+        if (state.tracks.length === 0) {
+          ul.style.display = "none";
+          ul.innerHTML = "";
+          if (tableHeader) tableHeader.style.display = "none";
+          if (summaryCard) summaryCard.style.display = "none";
+          empty.style.display = "flex";
+        } else {
+          ul.style.display = "flex";
+          if (tableHeader) tableHeader.style.display = "grid";
+          if (summaryCard) summaryCard.style.display = "flex";
+          empty.style.display = "none";
+
+          if (list.length === 0) {
+            ul.innerHTML = `<li style="padding: 30px; text-align: center; color: var(--text-dim); font-size: 13px;">검색 조건에 맞는 트랙이 없습니다.</li>`;
+          } else {
+            ul.innerHTML = list
+              .map((t, idx) => {
+                const isCur = t.id === state.currentTrackId;
+                const isPlayingThis = isCur && state.isPlaying;
+                return `
+              <li class="track-row ${isCur ? "playing" : ""}" onclick="selectAndPlayTrack('${t.id}')">
+                <div class="col-idx">
+                  <span class="idx-number">${idx + 1}</span>
+                  <span class="hover-play-icon">${isPlayingThis ? "⏸" : "▶"}</span>
+                  <div class="playing-bars">
+                    <div class="playing-bar"></div>
+                    <div class="playing-bar"></div>
+                    <div class="playing-bar"></div>
+                  </div>
+                </div>
+                <div class="col-title">
+                  <div class="track-title">${t.title}</div>
+                  <div class="track-artist">${t.artist}</div>
+                </div>
+                <div class="col-archive">
+                  <span class="archive-badge" title="${t.archiveName}">📦 ${t.archiveName}</span>
+                </div>
+                <div class="col-format">${t.format}</div>
+                <div class="col-duration">${t.durationStr}</div>
+                <div class="col-actions">
+                  <button class="btn-icon delete" onclick="deleteTrack('${t.id}', event)" title="삭제">✕</button>
+                </div>
+              </li>
+            `;
+              })
+              .join("");
+          }
+        }
+
+        // 통계 수치 갱신
+        const statArchive = document.getElementById("statArchiveCount");
+        if (statArchive) {
+          const uniqueArchives = new Set(state.tracks.map((t) => t.archiveName))
+            .size;
+          statArchive.textContent = `${uniqueArchives}개`;
+        }
+        const totalSec = state.tracks.reduce(
+          (acc, cur) => acc + (cur.durationSec || 0),
+          0,
+        );
+        const min = Math.floor(totalSec / 60);
+        const sec = totalSec % 60;
+
+        const statTrack = document.getElementById("statTrackCount");
+        if (statTrack) statTrack.textContent = `${state.tracks.length}곡`;
+        const statDuration = document.getElementById("statTotalDuration");
+        if (statDuration) statDuration.textContent = `${min}분 ${sec}초`;
+      }
+
+      // 렌더링: 하단 플레이어 바
+      function renderPlayerBar() {
+        const cur = state.tracks.find((t) => t.id === state.currentTrackId);
+        const btnPlay = document.getElementById("btnPlayPause");
+
+        if (!cur) {
+          document.getElementById("playerTitle").textContent =
+            "재생 중인 곡이 없습니다";
+          document.getElementById("playerArtist").textContent =
+            "트랙을 선택하세요";
+          const badge = document.getElementById("playerArchiveBadge");
+          if (badge) badge.style.display = "none";
+          btnPlay.textContent = "▶";
+          document.getElementById("progressFill").style.width = "0%";
+          document.getElementById("timeCurrent").textContent = "00:00";
+          document.getElementById("timeTotal").textContent = "00:00";
+          return;
+        }
+
+        document.getElementById("playerTitle").textContent = cur.title;
+        document.getElementById("playerArtist").textContent = cur.artist;
+
+        const badge = document.getElementById("playerArchiveBadge");
+        if (badge) {
+          badge.style.display = "inline-flex";
+          badge.textContent =
+            cur.archiveName.length > 20
+              ? cur.archiveName.substr(0, 18) + "..."
+              : cur.archiveName;
+        }
+
+        btnPlay.textContent = state.isPlaying ? "⏸" : "▶";
+
+        const dur = cur.durationSec || 200;
+        const curSec = state.currentTimeSec;
+        const pct = Math.min(100, (curSec / dur) * 100);
+        document.getElementById("progressFill").style.width = `${pct}%`;
+
+        const cMin = String(Math.floor(curSec / 60)).padStart(2, "0");
+        const cSec = String(curSec % 60).padStart(2, "0");
+        document.getElementById("timeCurrent").textContent = `${cMin}:${cSec}`;
+        document.getElementById("timeTotal").textContent =
+          cur.durationStr || "03:20";
+
+        document.getElementById("lyricsSongInfo").textContent =
+          `${cur.title} - ${cur.artist}`;
+      }
+
+      function renderAll() {
+        renderArchiveChips();
+        renderTrackList();
+        renderPlayerBar();
+      }
+
+      // 타이머 시뮬레이션 (재생 진행)
+      setInterval(() => {
+        if (state.isPlaying && state.currentTrackId) {
+          const cur = state.tracks.find((t) => t.id === state.currentTrackId);
+          if (cur) {
+            state.currentTimeSec += 1;
+            if (state.currentTimeSec > cur.durationSec) {
+              // 다음 곡으로 자동 이동
+              playNextTrack();
+            } else {
+              renderPlayerBar();
+            }
+          }
+        }
+      }, 1000);
+
+      function playNextTrack() {
+        if (state.tracks.length === 0) return;
+        const idx = state.tracks.findIndex(
+          (t) => t.id === state.currentTrackId,
+        );
+        let nextIdx = idx + 1;
+        if (nextIdx >= state.tracks.length) nextIdx = 0;
+        state.currentTrackId = state.tracks[nextIdx].id;
+        state.currentTimeSec = 0;
+        state.isPlaying = true;
+        saveStateToStorage();
+        renderAll();
+      }
+
+      function playPrevTrack() {
+        if (state.tracks.length === 0) return;
+        const idx = state.tracks.findIndex(
+          (t) => t.id === state.currentTrackId,
+        );
+        let prevIdx = idx - 1;
+        if (prevIdx < 0) prevIdx = state.tracks.length - 1;
+        state.currentTrackId = state.tracks[prevIdx].id;
+        state.currentTimeSec = 0;
+        state.isPlaying = true;
+        saveStateToStorage();
+        renderAll();
+      }
+
+      // ==========================================================================
+      // 이벤트 바인딩
+      // ==========================================================================
+      document.addEventListener("DOMContentLoaded", () => {
+        loadStateFromStorage();
+        renderAll();
+
+        // 테마 토글
+        document
+          .getElementById("btnThemeToggle")
+          .addEventListener("click", () => {
+            applyTheme(state.theme === "dark" ? "light" : "dark");
+          });
+
+        // 검색 입력
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", (e) => {
+            state.searchQuery = e.target.value;
+            renderTrackList();
+          });
+
+        // 전체 비우기
+        document
+          .getElementById("btnClearAll")
+          .addEventListener("click", clearAllTracks);
+
+        // 빈 상태 버튼들
+        const btnEmptyAdd = document.getElementById("btnEmptyAdd");
+        if (btnEmptyAdd) {
+          btnEmptyAdd.addEventListener("click", () => {
+            document.getElementById("addModal").classList.add("open");
+          });
+        }
+        const btnEmptySample = document.getElementById("btnEmptySample");
+        if (btnEmptySample) {
+          btnEmptySample.addEventListener("click", () => {
+            appendTracksFromArchive(
+              "2024_TopHits_Lossless.zip",
+              PRESETS.preset1.tracks,
+        // 재생/일시정지 버튼
+        document
+          .getElementById("btnPlayPause")
+          .addEventListener("click", () => {
+            if (!state.currentTrackId && state.tracks.length > 0) {
+              state.currentTrackId = state.tracks[0].id;
+              state.isPlaying = true;
+            } else if (state.currentTrackId) {
+              state.isPlaying = !state.isPlaying;
+            }
+            saveStateToStorage();
+            renderAll();
+          });
+
+        document
+          .getElementById("btnNext")
+          .addEventListener("click", playNextTrack);
+        document
+          .getElementById("btnPrev")
+          .addEventListener("click", playPrevTrack);
+
+        // 프로그레스 바 클릭 시크
+        document
+          .getElementById("progressSlider")
+          .addEventListener("click", (e) => {
+            const cur = state.tracks.find((t) => t.id === state.currentTrackId);
+            if (!cur) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const pct = Math.max(0, Math.min(1, clickX / rect.width));
+            state.currentTimeSec = Math.floor(pct * cur.durationSec);
+            renderPlayerBar();
+          });
+
+        // 파일 추가 버튼 (헤더 & 빈 상태)
+        const realFileInput = document.getElementById("realFileInput");
+        document
+          .getElementById("btnOpenAddModal")
+          .addEventListener("click", () => realFileInput.click());
+
+        const btnEmptyAdd = document.getElementById("btnEmptyAdd");
+        if (btnEmptyAdd) {
+          btnEmptyAdd.addEventListener("click", () => realFileInput.click());
+        }
+
+        realFileInput.addEventListener("change", (e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            for (let i = 0; i < e.target.files.length; i++) {
+              const file = e.target.files[i];
+              const baseName = file.name.replace(/\.[^/.]+$/, "");
+              const sampleTracks = [
+                {
+                  title: `${baseName} - Track 01`,
+                  artist: "Audio Track",
+                  format: "FLAC 24b",
+                  durationSec: 215,
+                  durationStr: "03:35",
+                },
+                {
+                  title: `${baseName} - Track 02`,
+                  artist: "Audio Track",
+                  format: "FLAC 24b",
+                  durationSec: 185,
+                  durationStr: "03:05",
+                },
+                {
+                  title: `${baseName} - Track 03`,
+                  artist: "Audio Track",
+                  format: "FLAC 24b",
+                  durationSec: 240,
+                  durationStr: "04:00",
+                },
+              ];
+              appendTracksFromArchive(file.name, sampleTracks);
+            }
+          }
+        });
+
+        // 전역 드래그 앤 드롭 파일 인제스트 지원
+        window.addEventListener("dragover", (e) => e.preventDefault());
+        window.addEventListener("drop", (e) => {
+          e.preventDefault();
+          if (
+            e.dataTransfer &&
+            e.dataTransfer.files &&
+            e.dataTransfer.files.length > 0
+          ) {
+            for (let i = 0; i < e.dataTransfer.files.length; i++) {
+              const file = e.dataTransfer.files[i];
+              const sampleTracks = [
+                {
+                  title: `${file.name.replace(/\.[^/.]+$/, "")} - Track 01`,
+                  artist: "Drop Ingest",
+                  format: "FLAC",
+                  durationSec: 220,
+                  durationStr: "03:40",
+                },
+                {
+                  title: `${file.name.replace(/\.[^/.]+$/, "")} - Track 02`,
+                  artist: "Drop Ingest",
+                  format: "FLAC",
+                  durationSec: 195,
+                  durationStr: "03:15",
+                },
+              ];
+              appendTracksFromArchive(file.name, sampleTracks);
+            }
+          }
+        });
+
+        // 가사 모달
+        const lyricsModal = document.getElementById("lyricsModal");
+        document
+          .getElementById("btnOpenLyrics")
+          .addEventListener("click", () => lyricsModal.classList.add("open"));
+        document
+          .getElementById("btnCloseLyricsModal")
+          .addEventListener("click", () =>
+            lyricsModal.classList.remove("open"),
+          );
+        lyricsModal.addEventListener("click", (e) => {
+          if (e.target === lyricsModal) lyricsModal.classList.remove("open");
+        });
+
+        // EQ 모달
+        const eqModal = document.getElementById("eqModal");
+        document
+          .getElementById("btnOpenEQ")
+          .addEventListener("click", () => eqModal.classList.add("open"));
+        document
+          .getElementById("btnCloseEqModal")
+          .addEventListener("click", () => eqModal.classList.remove("open"));
+        eqModal.addEventListener("click", (e) => {
+          if (e.target === eqModal) eqModal.classList.remove("open");
+        });
+      });
+    </script>
+  </body>
 </html>

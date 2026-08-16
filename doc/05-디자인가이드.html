@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko" data-theme="cyber">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🎨 h2y Music Player UI 디자인 시스템 & 가이드 (FORM-05-04)</title>
   
-  <!-- Google Fonts -->
+  <!-- Pretendard & Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
     /* 5대 멀티 테마 시스템 (Flutter AppColors와 100% 동기화) */
@@ -144,7 +145,7 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
       background: var(--bg-base);
       color: var(--text-main);
       min-height: 100vh;
@@ -561,10 +562,10 @@
 
           <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px;">
             <div>
-              <div style="font-size: 15px; font-weight: 700;">Mini Player Track Title (Inter 15px / 700)</div>
+              <div style="font-size: 15px; font-weight: 700;">Mini Player Track Title (Pretendard 15px / 700)</div>
               <div style="font-size: 11px; color: var(--text-muted);">하단 미니바 및 트랙 리스트 제목</div>
             </div>
-            <code style="font-family: 'JetBrains Mono'; font-size: 11px; color: var(--cyan-neon);">Inter / 15px / 700</code>
+            <code style="font-family: 'JetBrains Mono'; font-size: 11px; color: var(--cyan-neon);">Pretendard / 15px / 700</code>
           </div>
 
           <div style="display: flex; justify-content: space-between; align-items: baseline;">

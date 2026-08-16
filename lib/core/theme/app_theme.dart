@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTheme {
   AppTheme._();
 
+  static const String fontFamily = 'Pretendard';
+
   static ThemeData get darkTheme {
-    final baseTextTheme = GoogleFonts.interTextTheme(ThemeData.dark().textTheme);
+    final baseTextTheme = ThemeData.dark().textTheme.apply(
+      fontFamily: fontFamily,
+    );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      fontFamily: fontFamily,
       scaffoldBackgroundColor: AppColors.bgDark,
       primaryColor: AppColors.accentCyan,
       colorScheme: const ColorScheme.dark(
